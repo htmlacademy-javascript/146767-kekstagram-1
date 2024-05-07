@@ -1,6 +1,6 @@
 // Функции для тренировки
 
-const checkedThePalindrome = (stringPalindrome) => {
+const getPalindromeCheck = (stringPalindrome) => {
 
   const string = stringPalindrome.toLowerCase().replaceAll(' ', '');
   const stringReverse = string.split('').reverse().join('');
@@ -9,7 +9,7 @@ const checkedThePalindrome = (stringPalindrome) => {
 
 };
 
-checkedThePalindrome('Лёша на полке клопа нашёл ');
+getPalindromeCheck('Лёша на полке клопа нашёл ');
 
 
 // Альтернативный вариант решения задачи, является ли строка палиндромом
@@ -39,7 +39,7 @@ const getTheNumbers = (stringWithNumbers) => {
 getTheNumbers('ECMAScript 2022');
 
 
-const padString = (originalString, minLength, paddingString) => {
+const getModifiedString = (originalString, minLength, paddingString) => {
 
   if (minLength <= originalString.length) {
     return originalString;
@@ -66,12 +66,12 @@ const padString = (originalString, minLength, paddingString) => {
   return sumOriginPaddingString;
 };
 
-padString('1', 2, '0');
+getModifiedString('1', 2, '0');
 
 
-const checkedLengthString = (checkString, valideLength) => {
+const getCheckLengthString = (checkString, valideLength) => {
   checkString = String(checkString).length;
   return checkString <= valideLength;
 };
 
-checkedLengthString('проверяемая строка', 20);
+getCheckLengthString('проверяемая строка', 20);
