@@ -1,18 +1,18 @@
 // Функции для тренировки
 
-const checkedThePalindrome = function (stringPalindrome) {
+const checkedThePalindrome = (stringPalindrome) => {
 
   const string = stringPalindrome.toLowerCase().replaceAll(' ', '');
   const stringReverse = string.split('').reverse().join('');
 
-  return string === stringReverse ? 'true' : 'false';
+  return string === stringReverse;
 
 };
 
 checkedThePalindrome('Лёша на полке клопа нашёл ');
 
 
-const getTheNumbers = function (stringWithNumbers) {
+const getTheNumbers = (stringWithNumbers) => {
 
   const numbers = String(stringWithNumbers).match(/\d+/g);
 
@@ -23,7 +23,7 @@ const getTheNumbers = function (stringWithNumbers) {
 getTheNumbers('ECMAScript 2022');
 
 
-const padString = function (originalString, minLength, paddingString) {
+const padString = (originalString, minLength, paddingString) => {
 
   if (minLength <= originalString.length) {
     return originalString;
