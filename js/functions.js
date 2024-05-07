@@ -12,6 +12,22 @@ const checkedThePalindrome = (stringPalindrome) => {
 checkedThePalindrome('Лёша на полке клопа нашёл ');
 
 
+// Альтернативный вариант решения задачи, является ли строка палиндромом
+const checkedPalindrome = (checkString) => {
+
+  const normalizedString = checkString.replaceAll(' ','').toUpperCase();
+  let invertedString = '';
+
+  for (let i = normalizedString.length; i > 0; i--) {
+    invertedString += normalizedString[i - 1];
+  }
+
+  return invertedString === normalizedString;
+};
+
+checkedPalindrome('Лёша на полке клопа нашёл ');
+
+
 const getTheNumbers = (stringWithNumbers) => {
 
   const numbers = String(stringWithNumbers).match(/\d+/g);
