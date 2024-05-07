@@ -51,3 +51,11 @@ const padString = (originalString, minLength, paddingString) => {
 };
 
 padString('1', 2, '0');
+
+
+const checkedLengthString = (checkString, valideLength) => {
+  checkString = String(checkString).length;
+  return checkString <= valideLength;
+};
+
+checkedLengthString('проверяемая строка', 20);
