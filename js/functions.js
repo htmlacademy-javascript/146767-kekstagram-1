@@ -21,3 +21,33 @@ const getTheNumbers = function (stringWithNumbers) {
 };
 
 getTheNumbers('ECMAScript 2022');
+
+
+const padString = function (originalString, minLength, paddingString) {
+
+  if (minLength <= originalString.length) {
+    return originalString;
+  }
+
+  const paddingCount = minLength - originalString.length;
+
+  paddingString = paddingString.substring(0, paddingCount);
+
+  let newPaddingString = '';
+  let sumOriginPaddingString = '';
+
+  for (let i = 0; sumOriginPaddingString.length < minLength; i++) {
+
+    if (paddingString.length > i) {
+      newPaddingString += paddingString[i];
+      sumOriginPaddingString = newPaddingString + originalString;
+    } else {
+      sumOriginPaddingString = paddingString[0] + sumOriginPaddingString;
+    }
+
+  }
+
+  return sumOriginPaddingString;
+};
+
+padString('1', 2, '0');
