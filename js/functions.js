@@ -1,77 +1,68 @@
 // Функции для тренировки
 
-const getPalindromeCheck = (stringPalindrome) => {
+const isPalindrome = (str) => {
+  const normalizedStr = str.toLowerCase().replaceAll(' ', '');
+  const reversedStr = str.split('').reverse().join('');
 
-  const string = stringPalindrome.toLowerCase().replaceAll(' ', '');
-  const stringReverse = string.split('').reverse().join('');
-
-  return string === stringReverse;
-
+  return normalizedStr === reversedStr;
 };
 
-getPalindromeCheck('Лёша на полке клопа нашёл ');
+isPalindrome('Лёша на полке клопа нашёл ');
 
 
 // Альтернативный вариант решения задачи, является ли строка палиндромом
-const checkedPalindrome = (checkString) => {
+const canPalindrome = (str) => {
+  const normalizedStr = str.replaceAll(' ','').toUpperCase();
 
-  const normalizedString = checkString.replaceAll(' ','').toUpperCase();
-  let invertedString = '';
-
-  for (let i = normalizedString.length; i > 0; i--) {
-    invertedString += normalizedString[i - 1];
+  for (let i = 0; normalizedStr.length / 2 > i; i++) {
+    if (normalizedStr[i] !== normalizedStr[normalizedStr.length - i - 1]) {
+      return false;
+    }
   }
 
-  return invertedString === normalizedString;
+  return true;
 };
 
-checkedPalindrome('Лёша на полке клопа нашёл ');
+canPalindrome('Д Овод ');
 
 
-const getTheNumbers = (stringWithNumbers) => {
-
+const getNumbers = (stringWithNumbers) => {
   const numbers = String(stringWithNumbers).match(/\d+/g);
 
-  return numbers ? Number(numbers.join('')) : 'NaN';
-
+  return numbers ? Number(numbers.join('')) : NaN;
 };
 
-getTheNumbers('ECMAScript 2022');
+getNumbers('ECMAScript 2022');
 
 
-const getModifiedString = (originalString, minLength, paddingString) => {
-
-  if (minLength <= originalString.length) {
-    return originalString;
+const getModifiedString = (originalStr, minLength, paddingStr) => {
+  if (minLength <= originalStr.length) {
+    return originalStr;
   }
 
-  const paddingCount = minLength - originalString.length;
+  const paddingLength = minLength - originalStr.length;
 
-  paddingString = paddingString.substring(0, paddingCount);
+  paddingStr = paddingStr.substring(0, paddingLength);
 
-  let newPaddingString = '';
-  let sumOriginPaddingString = '';
+  let newPaddingStr = '';
+  let sumOriginPaddingStr = '';
 
-  for (let i = 0; sumOriginPaddingString.length < minLength; i++) {
-
-    if (paddingString.length > i) {
-      newPaddingString += paddingString[i];
-      sumOriginPaddingString = newPaddingString + originalString;
+  for (let i = 0; sumOriginPaddingStr.length < minLength; i++) {
+    if (paddingStr.length > i) {
+      newPaddingStr += paddingStr[i];
+      sumOriginPaddingStr = newPaddingStr + originalStr;
     } else {
-      sumOriginPaddingString = paddingString[0] + sumOriginPaddingString;
+      sumOriginPaddingStr = paddingStr[0] + sumOriginPaddingStr;
     }
-
   }
 
-  return sumOriginPaddingString;
+  return sumOriginPaddingStr;
 };
 
 getModifiedString('1', 2, '0');
+getModifiedString('1', 20, '2345'); // 22222222222222223451
 
 
-const getCheckLengthString = (checkString, valideLength) => {
-  checkString = String(checkString).length;
-  return checkString <= valideLength;
-};
+const isStrLengthValidm = (str, maxLength) => str.length <= maxLength;
 
-getCheckLengthString('проверяемая строка', 20);
+isStrLengthValidm('проверяемая строка', 20);
