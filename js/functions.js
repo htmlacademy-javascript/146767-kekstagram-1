@@ -13,7 +13,7 @@ const canPalindrome = (str) => {
   const normalizedStr = str.replaceAll(' ','').toUpperCase();
 
   for (let i = 0; normalizedStr.length / 2 > i; i++) {
-    if (normalizedStr[i] !== normalizedStr[normalizedStr.length - i - 1]) {
+    if (normalizedStr.at(i) !== normalizedStr.at(normalizedStr.length - i - 1)) {
       return false;
     }
   }
@@ -37,26 +37,14 @@ const getModifiedString = (originalStr, minLength, paddingStr) => {
   }
 
   const paddingLength = minLength - originalStr.length;
-
-  paddingStr = paddingStr.substring(0, paddingLength);
-
-  let newPaddingStr = '';
-  let sumOriginPaddingStr = '';
-
-  for (let i = 0; sumOriginPaddingStr.length < minLength; i++) {
-    if (paddingStr.length > i) {
-      newPaddingStr += paddingStr[i];
-      sumOriginPaddingStr = newPaddingStr + originalStr;
-    } else {
-      sumOriginPaddingStr = paddingStr[0] + sumOriginPaddingStr;
-    }
-  }
+  const repeatPaddingSt = Math.floor(paddingLength / paddingStr.length);
+  const freeLength = paddingLength - repeatPaddingSt * paddingStr.length;
+  const sumOriginPaddingStr = paddingStr.slice(0, freeLength) + paddingStr.repeat(repeatPaddingSt) + originalStr;
 
   return sumOriginPaddingStr;
 };
 
-getModifiedString('1', 2, '0');
-getModifiedString('1', 20, '2345'); // 22222222222222223451
+getModifiedString('1', 20, '2345');
 
 const isStrLengthValidm = (str, maxLength) => str.length <= maxLength;
 
