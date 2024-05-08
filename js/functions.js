@@ -1,5 +1,4 @@
 // Функции для тренировки
-
 const isPalindrome = (str) => {
   const normalizedStr = str.toLowerCase().replaceAll(' ', '');
   const reversedStr = str.split('').reverse().join('');
@@ -8,7 +7,6 @@ const isPalindrome = (str) => {
 };
 
 isPalindrome('Лёша на полке клопа нашёл ');
-
 
 // Альтернативный вариант решения задачи, является ли строка палиндромом
 const canPalindrome = (str) => {
@@ -25,7 +23,6 @@ const canPalindrome = (str) => {
 
 canPalindrome('Д Овод ');
 
-
 const getNumbers = (stringWithNumbers) => {
   const numbers = String(stringWithNumbers).match(/\d+/g);
 
@@ -33,7 +30,6 @@ const getNumbers = (stringWithNumbers) => {
 };
 
 getNumbers('ECMAScript 2022');
-
 
 const getModifiedString = (originalStr, minLength, paddingStr) => {
   if (minLength <= originalStr.length) {
@@ -61,7 +57,6 @@ const getModifiedString = (originalStr, minLength, paddingStr) => {
 
 getModifiedString('1', 2, '0');
 getModifiedString('1', 20, '2345'); // 22222222222222223451
-
 
 const isStrLengthValidm = (str, maxLength) => str.length <= maxLength;
 
