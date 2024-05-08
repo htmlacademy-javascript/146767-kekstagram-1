@@ -39,9 +39,8 @@ const getModifiedString = (originalStr, minLength, paddingStr) => {
   const paddingLength = minLength - originalStr.length;
   const repeatPaddingSt = Math.floor(paddingLength / paddingStr.length);
   const freeLength = paddingLength - repeatPaddingSt * paddingStr.length;
-  const sumOriginPaddingStr = paddingStr.slice(0, freeLength) + paddingStr.repeat(repeatPaddingSt) + originalStr;
 
-  return sumOriginPaddingStr;
+  return paddingStr.slice(0, freeLength) + paddingStr.repeat(repeatPaddingSt) + originalStr;
 };
 
 getModifiedString('1', 20, '2345');
