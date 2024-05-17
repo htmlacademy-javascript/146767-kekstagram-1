@@ -64,4 +64,14 @@ const getObject = () => ({
   comments: getRandomComments(),
 });
 
-console.log(getObject());
+const getObjects = () => {
+  const objects = [];
+
+  for (let i = 0; i < MAX_VALUE; i++) {
+    objects.push(getObject());
+  }
+
+  return objects;
+};
+
+console.log(getObjects());
