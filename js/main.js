@@ -46,12 +46,22 @@ const getComment = () => ({
   name: NAMES[getRandomInteger(0, NAMES.length - 1)],
 });
 
+const getRandomComments = () => {
+  const comments = [];
+
+  for (let i = 0; i <= getRandomInteger(1, MESSAGES.length - 1); i++) {
+    comments.push(getComment());
+  }
+
+  return comments;
+};
+
 const getObject = () => ({
   id: getRandomInteger(MIN_VALUE, MAX_VALUE),
   url: `photos/${getRandomInteger(MIN_VALUE, MAX_VALUE)}.jpg`,
   description: PHOTO_DESCRIPTIONS[getRandomInteger(0, PHOTO_DESCRIPTIONS.length - 1)],
   likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
-  comments: getComment(),
+  comments: getRandomComments(),
 });
 
 console.log(getObject());
