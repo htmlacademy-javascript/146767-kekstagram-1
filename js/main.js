@@ -39,8 +39,27 @@ const getRandomInteger = (a, b) => {
   return Math.floor(result);
 };
 
+const getNotRepeatValues = (minRandomValue, maxRandomValue) => {
+  const values = [];
+
+  const getNotRepeatValue = (value) => {
+    while (values.includes(value)) {
+      value = getRandomInteger(minRandomValue, maxRandomValue);
+    }
+
+    values.push(value);
+    return value;
+  };
+
+  return getNotRepeatValue;
+};
+
+const getNotRepeatId = getNotRepeatValues(MIN_VALUE, MAX_VALUE);
+const getNotRepeatCommentId = getNotRepeatValues(0, 1000);
+const getNotRepeatUrl = getNotRepeatValues(MIN_VALUE, MAX_VALUE);
+
 const getComment = () => ({
-  id: getRandomInteger(MIN_VALUE, MAX_VALUE),
+  id: getNotRepeatCommentId(0, 1000),
   avatar: `avatars/${getRandomInteger(1, 6)}.jpg`,
   message: getRandomInteger(1, 2) === 1 ? MESSAGES[getRandomInteger(0, MESSAGES.length - 1)] : `${MESSAGES[getRandomInteger(0, MESSAGES.length - 1)]} ${ MESSAGES[getRandomInteger(0, MESSAGES.length - 1)]}`,
   name: NAMES[getRandomInteger(0, NAMES.length - 1)],
@@ -48,8 +67,9 @@ const getComment = () => ({
 
 const getRandomComments = () => {
   const comments = [];
+  const maxComments = getRandomInteger(MIN_VALUE, MAX_VALUE);
 
-  for (let i = 0; i <= getRandomInteger(1, MESSAGES.length - 1); i++) {
+  for (let i = 0; i < maxComments; i++) {
     comments.push(getComment());
   }
 
@@ -57,8 +77,8 @@ const getRandomComments = () => {
 };
 
 const getObject = () => ({
-  id: getRandomInteger(MIN_VALUE, MAX_VALUE),
-  url: `photos/${getRandomInteger(MIN_VALUE, MAX_VALUE)}.jpg`,
+  id: getNotRepeatId(getRandomInteger(MIN_VALUE, MAX_VALUE)),
+  url: `photos/${getNotRepeatUrl(getRandomInteger(MIN_VALUE, MAX_VALUE))}.jpg`,
   description: PHOTO_DESCRIPTIONS[getRandomInteger(0, PHOTO_DESCRIPTIONS.length - 1)],
   likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
   comments: getRandomComments(),
