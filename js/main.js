@@ -97,4 +97,4 @@ const getArrayObjects = () => {
   return arrayObjects;
 };
 
-console.log(getArrayObjects());
+getArrayObjects();
