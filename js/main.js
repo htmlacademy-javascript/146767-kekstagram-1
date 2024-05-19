@@ -4,6 +4,8 @@ const MIN_VALUE = 1;
 const MAX_VALUE = 25;
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
+const MIN_COMMENTS = 5;
+const MAX_COMMENTS = 20;
 const PHOTO_DESCRIPTIONS = [
   'Котик',
   'Вы',
@@ -39,15 +41,16 @@ const getRandomInteger = (a, b) => {
   return Math.floor(result);
 };
 
-const getNotRepeatValues = (minRandomValue, maxRandomValue) => {
-  const values = [];
+const getNotRepeatValues = (minValue, maxValue) => {
+  const arrayValues = [];
 
   const getNotRepeatValue = (value) => {
-    while (values.includes(value)) {
-      value = getRandomInteger(minRandomValue, maxRandomValue);
+    while (arrayValues.includes(value)) {
+      value = getRandomInteger(minValue, maxValue);
     }
 
-    values.push(value);
+    arrayValues.push(value);
+
     return value;
   };
 
@@ -55,25 +58,25 @@ const getNotRepeatValues = (minRandomValue, maxRandomValue) => {
 };
 
 const getNotRepeatId = getNotRepeatValues(MIN_VALUE, MAX_VALUE);
-const getNotRepeatCommentId = getNotRepeatValues(0, 1000);
 const getNotRepeatUrl = getNotRepeatValues(MIN_VALUE, MAX_VALUE);
+const getNotRepeatCommentId = getNotRepeatValues(1, 500);
 
 const getComment = () => ({
-  id: getNotRepeatCommentId(0, 1000),
+  id: getNotRepeatCommentId(getRandomInteger(1, 500)),
   avatar: `avatars/${getRandomInteger(1, 6)}.jpg`,
   message: getRandomInteger(1, 2) === 1 ? MESSAGES[getRandomInteger(0, MESSAGES.length - 1)] : `${MESSAGES[getRandomInteger(0, MESSAGES.length - 1)]} ${ MESSAGES[getRandomInteger(0, MESSAGES.length - 1)]}`,
   name: NAMES[getRandomInteger(0, NAMES.length - 1)],
 });
 
-const getRandomComments = () => {
-  const comments = [];
-  const maxComments = getRandomInteger(MIN_VALUE, MAX_VALUE);
+const getArrayComments = () => {
+  const arrayComments = [];
+  const maxComments = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
 
   for (let i = 0; i < maxComments; i++) {
-    comments.push(getComment());
+    arrayComments.push(getComment());
   }
 
-  return comments;
+  return arrayComments;
 };
 
 const getObject = () => ({
@@ -81,17 +84,17 @@ const getObject = () => ({
   url: `photos/${getNotRepeatUrl(getRandomInteger(MIN_VALUE, MAX_VALUE))}.jpg`,
   description: PHOTO_DESCRIPTIONS[getRandomInteger(0, PHOTO_DESCRIPTIONS.length - 1)],
   likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
-  comments: getRandomComments(),
+  comments: getArrayComments(),
 });
 
-const getObjects = () => {
-  const objects = [];
+const getArrayObjects = () => {
+  const arrayObjects = [];
 
   for (let i = 0; i < MAX_VALUE; i++) {
-    objects.push(getObject());
+    arrayObjects.push(getObject());
   }
 
-  return objects;
+  return arrayObjects;
 };
 
-console.log(getObjects());
+console.log(getArrayObjects());
