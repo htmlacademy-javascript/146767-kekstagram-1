@@ -1,7 +1,5 @@
-// Генерация данных
-
-const MIN_VALUE = 1;
-const MAX_VALUE = 25;
+const PICTURE_COUNT = 25;
+const AVATAR_COUNT = 6;
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MIN_COMMENTS = 5;
@@ -40,61 +38,36 @@ const getRandomInteger = (a, b) => {
 
   return Math.floor(result);
 };
+const getRandomArrayElement = (array) =>
+  array[getRandomInteger(0, array.length - 1)];
 
-const getNotRepeatValues = (minValue, maxValue) => {
-  const arrayValues = [];
+const createMessage = () =>
+  Array.from({ length: getRandomInteger(1, 2)}, () =>
+    getRandomArrayElement(MESSAGES)
+  ).join(' ');
 
-  const getNotRepeatValue = (value) => {
-    while (arrayValues.includes(value)) {
-      value = getRandomInteger(minValue, maxValue);
-    }
-
-    arrayValues.push(value);
-
-    return value;
-  };
-
-  return getNotRepeatValue;
-};
-
-const getNotRepeatId = getNotRepeatValues(MIN_VALUE, MAX_VALUE);
-const getNotRepeatUrl = getNotRepeatValues(MIN_VALUE, MAX_VALUE);
-const getNotRepeatCommentId = getNotRepeatValues(1, 500);
-
-const getComment = () => ({
-  id: getNotRepeatCommentId(getRandomInteger(1, 500)),
-  avatar: `avatars/${getRandomInteger(1, 6)}.jpg`,
-  message: getRandomInteger(1, 2) === 1 ? MESSAGES[getRandomInteger(0, MESSAGES.length - 1)] : `${MESSAGES[getRandomInteger(0, MESSAGES.length - 1)]} ${ MESSAGES[getRandomInteger(0, MESSAGES.length - 1)]}`,
-  name: NAMES[getRandomInteger(0, NAMES.length - 1)],
+const createComment = (index) => ({
+  id: index,
+  avatar: `avatars/${getRandomInteger(1, AVATAR_COUNT)}.jpg`,
+  message: createMessage(),
+  name: getRandomArrayElement(NAMES),
 });
 
-const getArrayComments = () => {
-  const arrayComments = [];
-  const maxComments = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
-
-  for (let i = 0; i < maxComments; i++) {
-    arrayComments.push(getComment());
-  }
-
-  return arrayComments;
-};
-
-const getObject = () => ({
-  id: getNotRepeatId(getRandomInteger(MIN_VALUE, MAX_VALUE)),
-  url: `photos/${getNotRepeatUrl(getRandomInteger(MIN_VALUE, MAX_VALUE))}.jpg`,
-  description: PHOTO_DESCRIPTIONS[getRandomInteger(0, PHOTO_DESCRIPTIONS.length - 1)],
+const createPicture = (index) => ({
+  id: index,
+  url: `photos/${index}.jpg`,
+  description: getRandomArrayElement(PHOTO_DESCRIPTIONS),
   likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
-  comments: getArrayComments(),
+  comments: Array.from(
+    { length: getRandomInteger(MIN_COMMENTS, MAX_COMMENTS) },
+    (_, indexPicture) =>
+      createComment(indexPicture + 1)
+  ),
 });
 
-const getArrayObjects = () => {
-  const arrayObjects = [];
+const createGallery = () =>
+  Array.from({ length: PICTURE_COUNT }, (_, index) =>
+    createPicture(index + 1)
+  );
 
-  for (let i = 0; i < MAX_VALUE; i++) {
-    arrayObjects.push(getObject());
-  }
-
-  return arrayObjects;
-};
-
-getArrayObjects();
+createGallery();
