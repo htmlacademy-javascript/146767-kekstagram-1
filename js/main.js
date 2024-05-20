@@ -60,14 +60,14 @@ const createPicture = (index) => ({
   likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
   comments: Array.from(
     { length: getRandomInteger(MIN_COMMENTS, MAX_COMMENTS) },
-    (_, indexPicture) =>
-      createComment(indexPicture + 1)
+    (_, indexComment) =>
+      createComment(indexComment + 1)
   ),
 });
 
 const createGallery = () =>
-  Array.from({ length: PICTURE_COUNT }, (_, index) =>
-    createPicture(index + 1)
+  Array.from({ length: PICTURE_COUNT }, (_, indexPicture) =>
+    createPicture(indexPicture + 1)
   );
 
 createGallery();
