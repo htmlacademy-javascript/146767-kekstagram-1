@@ -38,36 +38,31 @@ const getRandomInteger = (a, b) => {
 
   return Math.floor(result);
 };
-const getRandomArrayElement = (array) =>
+const getRandomArrElement = (array) =>
   array[getRandomInteger(0, array.length - 1)];
 
-const createMessage = () =>
-  Array.from({ length: getRandomInteger(1, 2)}, () =>
-    getRandomArrayElement(MESSAGES)
-  ).join(' ');
-
-const createComment = (index) => ({
-  id: index,
+const createComment = (id) => ({
+  id,
   avatar: `avatars/${getRandomInteger(1, AVATAR_COUNT)}.jpg`,
-  message: createMessage(),
-  name: getRandomArrayElement(NAMES),
+  message: getRandomArrElement(MESSAGES),
+  name: getRandomArrElement(NAMES),
 });
 
-const createPicture = (index) => ({
-  id: index,
-  url: `photos/${index}.jpg`,
-  description: getRandomArrayElement(PHOTO_DESCRIPTIONS),
+const createPicture = (id) => ({
+  id,
+  url: `photos/${id}.jpg`,
+  description: getRandomArrElement(PHOTO_DESCRIPTIONS),
   likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
   comments: Array.from(
     { length: getRandomInteger(MIN_COMMENTS, MAX_COMMENTS) },
-    (_, indexComment) =>
-      createComment(indexComment + 1)
+    (_, comentIndex) =>
+      createComment(comentIndex + 1)
   ),
 });
 
 const createGallery = () =>
-  Array.from({ length: PICTURE_COUNT }, (_, indexPicture) =>
-    createPicture(indexPicture + 1)
+  Array.from({ length: PICTURE_COUNT }, (_, pictureIndex) =>
+    createPicture(pictureIndex + 1)
   );
 
 createGallery();
