@@ -45,6 +45,6 @@ const getModifiedString = (originalStr, minLength, paddingStr) => {
 
 getModifiedString('1', 20, '2345');
 
-const isStrLengthValidm = (str, maxLength) => str.length <= maxLength;
+const isStrLengthValid = (str, maxLength) => str.length <= maxLength;
 
-isStrLengthValidm('проверяемая строка', 20);
+isStrLengthValid('проверяемая строка', 20);
