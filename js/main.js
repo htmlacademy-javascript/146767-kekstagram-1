@@ -1,3 +1,5 @@
+import {getRandomInteger, getRandomArrElement} from './util.js';
+
 const PICTURE_COUNT = 25;
 const AVATAR_COUNT = 6;
 const MIN_LIKES = 15;
@@ -31,16 +33,6 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-const getRandomInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-
-  return Math.floor(result);
-};
-const getRandomArrElement = (array) =>
-  array[getRandomInteger(0, array.length - 1)];
-
 const createComment = (id) => ({
   id,
   avatar: `avatars/${getRandomInteger(1, AVATAR_COUNT)}.jpg`,
@@ -66,3 +58,4 @@ const createGallery = () =>
   );
 
 createGallery();
+console.log(createGallery());
