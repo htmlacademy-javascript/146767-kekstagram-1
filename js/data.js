@@ -56,24 +56,3 @@ export const createGallery = () =>
   Array.from({ length: PICTURE_COUNT }, (_, pictureIndex) =>
     createPicture(pictureIndex + 1)
   );
-
-const galleryWrapper = document.querySelector('.pictures');
-const pictureTemplate = document.querySelector('#picture').content;
-const fragment = document.createDocumentFragment();
-
-const showGallery = createGallery();
-
-showGallery.forEach(({url, likes, comments}) => {
-  const picture = pictureTemplate.cloneNode(true);
-  const pictureSrc = picture.querySelector('.picture__img');
-  const pictureLikes = picture.querySelector('.picture__likes');
-  const pictureComments = picture.querySelector('.picture__comments');
-
-  pictureSrc.src = url;
-  pictureLikes.textContent = likes;
-  pictureComments.textContent = comments.length;
-
-  fragment.appendChild(picture);
-});
-
-galleryWrapper.appendChild(fragment);
