@@ -52,9 +52,7 @@ const createPicture = (id) => ({
   ),
 });
 
-const createGallery = () =>
+export const createGallery = () =>
   Array.from({ length: PICTURE_COUNT }, (_, pictureIndex) =>
     createPicture(pictureIndex + 1)
   );
-
-export {createGallery};
