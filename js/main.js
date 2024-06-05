@@ -1,3 +1,4 @@
-import {createGallery} from './data.js';
+import {showGallery} from './show-gallery.js';
 
-createGallery();
+// eslint-disable-next-line no-unused-expressions
+showGallery;
