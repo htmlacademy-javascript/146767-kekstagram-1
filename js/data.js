@@ -1,12 +1,10 @@
-import {getRandomInteger, getRandomArrElement} from './utils.js';
-
-const PICTURE_COUNT = 25;
-const AVATAR_COUNT = 6;
-const MIN_LIKES = 15;
-const MAX_LIKES = 200;
-const MIN_COMMENTS = 5;
-const MAX_COMMENTS = 20;
-const PHOTO_DESCRIPTIONS = [
+export const PICTURE_COUNT = 25;
+export const AVATAR_COUNT = 6;
+export const MIN_LIKES = 15;
+export const MAX_LIKES = 200;
+export const MIN_COMMENTS = 5;
+export const MAX_COMMENTS = 20;
+export const PHOTO_DESCRIPTIONS = [
   'Котик',
   'Вы',
   'Показывают',
@@ -14,7 +12,7 @@ const PHOTO_DESCRIPTIONS = [
   'Продаёте',
   'Рыбов'
 ];
-const NAMES = [
+export const NAMES = [
   'Иван',
   'Хуан Себастьян',
   'Мария',
@@ -24,7 +22,7 @@ const NAMES = [
   'Люпита',
   'Вашингтон',
 ];
-const MESSAGES = [
+export const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -32,27 +30,3 @@ const MESSAGES = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
-
-const createComment = (id) => ({
-  id,
-  avatar: `avatars/${getRandomInteger(1, AVATAR_COUNT)}.jpg`,
-  message: getRandomArrElement(MESSAGES),
-  name: getRandomArrElement(NAMES),
-});
-
-const createPicture = (id) => ({
-  id,
-  url: `photos/${id}.jpg`,
-  description: getRandomArrElement(PHOTO_DESCRIPTIONS),
-  likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
-  comments: Array.from(
-    { length: getRandomInteger(MIN_COMMENTS, MAX_COMMENTS) },
-    (_, comentIndex) =>
-      createComment(comentIndex + 1)
-  ),
-});
-
-export const createGallery = () =>
-  Array.from({ length: PICTURE_COUNT }, (_, pictureIndex) =>
-    createPicture(pictureIndex + 1)
-  );
