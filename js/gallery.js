@@ -30,16 +30,13 @@ const createPicture = (id) => ({
   ),
 });
 
-export const createGallery = () =>
+const createGallery = () =>
   Array.from({ length: PICTURE_COUNT }, (_, pictureIndex) =>
     createPicture(pictureIndex + 1)
   );
 
-const galleryWrapper = document.querySelector('.pictures');
-const pictureTemplate = document.querySelector('#picture').content;
-const fragment = document.createDocumentFragment();
-
-const getPicture = ({url, likes, comments}) => {
+const createPictureEl = ({url, likes, comments}) => {
+  const pictureTemplate = document.querySelector('#picture').content;
   const picture = pictureTemplate.cloneNode(true);
   const pictureSrc = picture.querySelector('.picture__img');
   const pictureLikes = picture.querySelector('.picture__likes');
@@ -52,13 +49,15 @@ const getPicture = ({url, likes, comments}) => {
   return picture;
 };
 
-const showGallery = (photos) => {
-  photos.forEach((photo) => {
-    fragment.appendChild(getPicture(photo));
+const renderGallery = (photos) => {
+  const galleryWrapper = document.querySelector('.pictures');
+  const fragment = document.createDocumentFragment();
 
+  photos.forEach((photo) => {
+    fragment.appendChild(createPictureEl(photo));
   });
 
   galleryWrapper.appendChild(fragment);
 };
 
-showGallery(createGallery());
+renderGallery(createGallery());
