@@ -65,6 +65,15 @@ const createGalleryData = createGallery();
 
 renderGallery(createGalleryData);
 
+const renderChosenPicture = (evt) => {
+  const bigPicture = document.querySelector('.big-picture');
+
+  bigPicture.querySelector('img').src = evt.url;
+  bigPicture.querySelector('.likes-count').textContent = evt.likes;
+  bigPicture.querySelector('.comments-count').textContent = evt.comments.length;
+  bigPicture.querySelector('.social__caption').textContent = evt.description;
+};
+
 const renderComment = ({avatar, name, message}) => {
   const commentItem = document.querySelector('.social__comment').cloneNode(true);
   const commentText = commentItem.querySelector('.social__text');
@@ -77,31 +86,23 @@ const renderComment = ({avatar, name, message}) => {
   return commentItem;
 };
 
-const renderComments = (dataComments) => {
-  const commentWrapper = document.querySelector('.social__comments');
+const renderComments = (commentsArr) => {
+  const commentsWrapper = document.querySelector('.social__comments');
   const fragment = document.createDocumentFragment();
 
-  dataComments.forEach((comment) => {
+  commentsArr.forEach((comment) => {
     fragment.appendChild(renderComment(comment));
-    console.log(fragment);
   });
 
-  commentWrapper.innerHTML = '';
-  console.log(commentWrapper);
-  commentWrapper.appendChild(fragment);
+  commentsWrapper.innerHTML = '';
+  commentsWrapper.appendChild(fragment);
 };
 
 const renderBigPicture = (evt) => {
-  const bigPicture = document.querySelector('.big-picture');
-  const dataObject = createGalleryData.find(({id}) => id === +evt.target.dataset.id);
+  const currentData = createGalleryData.find(({id}) => id === +evt.target.dataset.id);
 
-  bigPicture.querySelector('img').src = dataObject.url;
-  bigPicture.querySelector('.likes-count').textContent = dataObject.likes;
-  bigPicture.querySelector('.comments-count').textContent = dataObject.comments.length;
-  bigPicture.querySelector('.social__caption').textContent = dataObject.description;
-
-  console.log(dataObject);
-  renderComments(dataObject.comments);
+  renderChosenPicture(currentData);
+  renderComments(currentData.comments);
 };
 
 const handleClickPicture = (evt) => {
@@ -113,16 +114,13 @@ const handleClickPicture = (evt) => {
   const commentsLoader = document.querySelector('.comments-loader');
 
   if (evt.target.matches('.picture__img')) {
-    console.log(evt.target);
-
+    body.classList.add('modal-open');
     bigPicture.classList.remove('hidden');
     commentCount.classList.add('hidden');
     commentsLoader.classList.add('hidden');
-    body.classList.add('modal-open');
 
     renderBigPicture(evt);
   }
-
 };
 
 const galleryWrapper2 = document.querySelector('.pictures');
