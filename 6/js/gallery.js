@@ -10,6 +10,10 @@ import {
   PHOTO_DESCRIPTIONS,
   NAMES
 } from './data.js';
+import {openBigPicture} from './big-picture.js';
+
+const pictureTemplate = document.querySelector('#picture').content;
+const gallery = document.querySelector('.pictures');
 
 const createComment = (id) => ({
   id,
@@ -36,7 +40,6 @@ const createGallery = () =>
   );
 
 const createPictureEl = ({id, url, likes, comments}) => {
-  const pictureTemplate = document.querySelector('#picture').content;
   const picture = pictureTemplate.cloneNode(true);
   const pictureSrc = picture.querySelector('.picture__img');
   const pictureLikes = picture.querySelector('.picture__likes');
@@ -51,16 +54,33 @@ const createPictureEl = ({id, url, likes, comments}) => {
 };
 
 const renderGallery = (photos) => {
-  const galleryWrapper = document.querySelector('.pictures');
   const fragment = document.createDocumentFragment();
 
   photos.forEach((photo) => {
     fragment.appendChild(createPictureEl(photo));
   });
 
-  galleryWrapper.appendChild(fragment);
+  gallery.appendChild(fragment);
 };
 
-export const createGalleryData = createGallery();
+const createGalleryData = createGallery();
 
 renderGallery(createGalleryData);
+
+const onPictureClick = (click) => {
+  const imgEl = click.target.matches('.picture__img');
+
+  if (!imgEl) {
+    return;
+  }
+
+  const currentData = createGalleryData.find(({id}) => id === +click.target.dataset.id);
+
+  openBigPicture(currentData);
+};
+
+const renderBigPicture = () => {
+  gallery.addEventListener('click', onPictureClick);
+};
+
+renderBigPicture();
