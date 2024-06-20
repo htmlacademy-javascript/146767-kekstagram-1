@@ -14,7 +14,7 @@ const renderPictureData = (data) => {
   bigPicture.querySelector('.social__caption').textContent = data.description;
 };
 
-const renderCommentEl = ({avatar, name, message}) => {
+const createCommentEl = ({avatar, name, message}) => {
   const commentItem = commentTemplate.cloneNode(true);
   const commentText = commentItem.querySelector('.social__text');
   const commentPicture = commentItem.querySelector('.social__picture');
@@ -30,7 +30,7 @@ const renderComments = (comments) => {
   const fragment = document.createDocumentFragment();
 
   comments.forEach((comment) => {
-    fragment.appendChild(renderCommentEl(comment));
+    fragment.appendChild(createCommentEl(comment));
   });
 
   commentsWrapper.innerHTML = '';
@@ -67,7 +67,6 @@ function onDocumentKeydown(evt) {
   }
 }
 
-function onButtonCloseClick(evt) {
-  evt.preventDefault();
+function onButtonCloseClick() {
   closeBigPicture();
 }
