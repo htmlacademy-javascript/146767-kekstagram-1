@@ -67,20 +67,16 @@ const createGalleryData = createGallery();
 
 renderGallery(createGalleryData);
 
-const onPictureClick = (click) => {
-  const imgEl = click.target.matches('.picture__img');
+const onGalleryClick = (evt) => {
+  const imgEl = evt.target.matches('.picture__img');
 
   if (!imgEl) {
     return;
   }
 
-  const currentData = createGalleryData.find(({id}) => id === +click.target.dataset.id);
+  const currentData = createGalleryData.find(({id}) => id === +evt.target.dataset.id);
 
   openBigPicture(currentData);
 };
 
-const renderBigPicture = () => {
-  gallery.addEventListener('click', onPictureClick);
-};
-
-renderBigPicture();
+gallery.addEventListener('click', onGalleryClick);
