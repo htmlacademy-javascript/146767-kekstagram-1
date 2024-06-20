@@ -1,3 +1,1 @@
-import {createGallery} from './gallery.js';
-
-createGallery();
+import './gallery.js';

@@ -10,10 +10,14 @@ import {
   PHOTO_DESCRIPTIONS,
   NAMES
 } from './data.js';
+import {openBigPicture} from './big-picture.js';
+
+const pictureTemplate = document.querySelector('#picture').content;
+const gallery = document.querySelector('.pictures');
 
 const createComment = (id) => ({
   id,
-  avatar: `avatars/${getRandomInteger(1, AVATAR_COUNT)}.jpg`,
+  avatar: `img/avatar-${getRandomInteger(1, AVATAR_COUNT)}.svg`,
   message: getRandomArrElement(MESSAGES),
   name: getRandomArrElement(NAMES),
 });
@@ -30,35 +34,49 @@ const createPicture = (id) => ({
   ),
 });
 
-export const createGallery = () =>
+const createGallery = () =>
   Array.from({ length: PICTURE_COUNT }, (_, pictureIndex) =>
     createPicture(pictureIndex + 1)
   );
 
-const galleryWrapper = document.querySelector('.pictures');
-const pictureTemplate = document.querySelector('#picture').content;
-const fragment = document.createDocumentFragment();
-
-const getPicture = ({url, likes, comments}) => {
+const createPictureEl = ({id, url, likes, comments}) => {
   const picture = pictureTemplate.cloneNode(true);
   const pictureSrc = picture.querySelector('.picture__img');
   const pictureLikes = picture.querySelector('.picture__likes');
   const pictureComments = picture.querySelector('.picture__comments');
 
   pictureSrc.src = url;
+  pictureSrc.dataset.id = id;
   pictureLikes.textContent = likes;
   pictureComments.textContent = comments.length;
 
   return picture;
 };
 
-const showGallery = (photos) => {
-  photos.forEach((photo) => {
-    fragment.appendChild(getPicture(photo));
+const renderGallery = (photos) => {
+  const fragment = document.createDocumentFragment();
 
+  photos.forEach((photo) => {
+    fragment.appendChild(createPictureEl(photo));
   });
 
-  galleryWrapper.appendChild(fragment);
+  gallery.appendChild(fragment);
 };
 
-showGallery(createGallery());
+const createGalleryData = createGallery();
+
+renderGallery(createGalleryData);
+
+const onGalleryClick = (evt) => {
+  const imgEl = evt.target.matches('.picture__img');
+
+  if (!imgEl) {
+    return;
+  }
+
+  const currentData = createGalleryData.find(({id}) => id === +evt.target.dataset.id);
+
+  openBigPicture(currentData);
+};
+
+gallery.addEventListener('click', onGalleryClick);
