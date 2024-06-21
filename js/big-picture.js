@@ -1,11 +1,12 @@
 import {isEscapeKey} from './utils.js';
+const SHOW_COMMENTS_COUNT = 5;
 
 const bigPicture = document.querySelector('.big-picture');
-const commentCount = document.querySelector('.social__comment-count');
-const commentsLoader = document.querySelector('.comments-loader');
 const buttonClose = document.querySelector('.big-picture__cancel');
 const commentsWrapper = document.querySelector('.social__comments');
 const commentTemplate = document.querySelector('#social-comment').content;
+const commentsLoader = document.querySelector('.social__comments-loader');
+const showCommentsCountEl = document.querySelector('.show-comments-count');
 
 const renderPictureData = (data) => {
   bigPicture.querySelector('img').src = data.url;
@@ -37,14 +38,32 @@ const renderComments = (comments) => {
   commentsWrapper.appendChild(fragment);
 };
 
+const hideComments = (showCommentsCount) => {
+  const comments = document.querySelectorAll('.social__comment');
+
+  showCommentsCountEl.textContent = showCommentsCount;
+
+  if (showCommentsCount === comments.length) {
+    commentsLoader.classList.add('hidden');
+  }
+
+  if (showCommentsCount > comments.length) {
+    commentsLoader.classList.add('hidden');
+    showCommentsCountEl.textContent = comments.length;
+  }
+
+  for (showCommentsCount; showCommentsCount < comments.length; showCommentsCount++) {
+    comments[showCommentsCount].classList.add('hidden');
+  }
+};
+
 export const openBigPicture = (currentData) => {
   document.body.classList.add('modal-open');
   bigPicture.classList.remove('hidden');
-  commentCount.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
 
   renderPictureData(currentData);
   renderComments(currentData.comments);
+  hideComments(SHOW_COMMENTS_COUNT);
 
   buttonClose.addEventListener('click', onButtonCloseClick);
   document.addEventListener('keydown', onDocumentKeydown);
@@ -53,7 +72,6 @@ export const openBigPicture = (currentData) => {
 const closeBigPicture = () => {
   document.body.classList.remove('modal-open');
   bigPicture.classList.add('hidden');
-  commentCount.classList.remove('hidden');
   commentsLoader.classList.remove('hidden');
 
   buttonClose.removeEventListener('click', onButtonCloseClick);
