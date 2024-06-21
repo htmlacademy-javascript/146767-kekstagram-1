@@ -1,5 +1,6 @@
 import {isEscapeKey} from './utils.js';
 const SHOW_COMMENTS_COUNT = 5;
+const SHOW_COMMENTS_ON_CLICK = 5;
 
 const bigPicture = document.querySelector('.big-picture');
 const buttonClose = document.querySelector('.big-picture__cancel');
@@ -57,6 +58,29 @@ const hideComments = (showCommentsCount) => {
   }
 };
 
+let commentsCount = SHOW_COMMENTS_COUNT;
+
+const onCommentsLoaderClick = () => {
+  const comments = document.querySelectorAll('.social__comment');
+
+  const showComments = () => {
+    for (let i = 0; i < SHOW_COMMENTS_ON_CLICK; i++) {
+      if (commentsCount < comments.length) {
+        comments[commentsCount].classList.remove('hidden');
+        commentsCount++;
+        showCommentsCountEl.textContent = commentsCount;
+      }
+
+      if (commentsCount === comments.length) {
+        commentsLoader.classList.add('hidden');
+        return;
+      }
+    }
+  };
+
+  return showComments();
+};
+
 export const openBigPicture = (currentData) => {
   document.body.classList.add('modal-open');
   bigPicture.classList.remove('hidden');
@@ -65,6 +89,7 @@ export const openBigPicture = (currentData) => {
   renderComments(currentData.comments);
   hideComments(SHOW_COMMENTS_COUNT);
 
+  commentsLoader.addEventListener('click', onCommentsLoaderClick);
   buttonClose.addEventListener('click', onButtonCloseClick);
   document.addEventListener('keydown', onDocumentKeydown);
 };
@@ -74,8 +99,11 @@ const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
   commentsLoader.classList.remove('hidden');
 
+  commentsLoader.removeEventListener('click', onCommentsLoaderClick);
   buttonClose.removeEventListener('click', onButtonCloseClick);
   document.removeEventListener('keydown', onDocumentKeydown);
+
+  commentsCount = SHOW_COMMENTS_COUNT;
 };
 
 function onDocumentKeydown(evt) {
