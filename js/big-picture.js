@@ -11,11 +11,12 @@ const commentsWrapper = document.querySelector('.social__comments');
 const commentTemplate = document.querySelector('#social-comment').content;
 const commentsLoader = document.querySelector('.social__comments-loader');
 const showCommentsCountEl = document.querySelector('.show-comments-count');
+const commentsCountEl = document.querySelector('.comments-count');
 
 const renderPictureData = (data) => {
   bigPicture.querySelector('img').src = data.url;
+  commentsCountEl.textContent = data.comments.length;
   bigPicture.querySelector('.likes-count').textContent = data.likes;
-  bigPicture.querySelector('.comments-count').textContent = data.comments.length;
   bigPicture.querySelector('.social__caption').textContent = data.description;
 };
 
@@ -32,6 +33,7 @@ const createCommentEl = ({avatar, name, message}) => {
 };
 
 const resetComments = (resetParameter) => {
+  commentsCountEl.textContent = resetParameter;
   showCommentsCountEl.textContent = resetParameter;
 
   commentsCount = resetParameter;
@@ -41,6 +43,12 @@ const resetComments = (resetParameter) => {
 };
 
 const renderComments = (comments) => {
+  if (commentsCount === comments.length) {
+    commentsCountEl.textContent = commentsCount;
+    commentsLoader.classList.add('hidden');
+    return;
+  }
+
   for (let i = 0; i < 5; i++) {
     commentsWrapper.appendChild(createCommentEl(comments[commentsCount]));
 
