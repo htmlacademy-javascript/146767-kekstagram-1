@@ -1,16 +1,17 @@
 import {isEscapeKey} from './utils.js';
 
-const RESET_COMMENTS_COUNT = 0;
+const DEFAULT_COMMENTS_COUNT = 0;
+const RENDER_COMMENTS_COUNT = 5;
 
-let commentsCount = RESET_COMMENTS_COUNT;
-let commentsArr = [];
+let commentsCount = DEFAULT_COMMENTS_COUNT;
+let activeComments = [];
 
 const bigPicture = document.querySelector('.big-picture');
 const buttonClose = document.querySelector('.big-picture__cancel');
 const commentsWrapper = document.querySelector('.social__comments');
 const commentTemplate = document.querySelector('#social-comment').content;
 const commentsLoader = document.querySelector('.social__comments-loader');
-const showCommentsCountEl = document.querySelector('.show-comments-count');
+const showCommentsCount = document.querySelector('.show-comments-count');
 const commentsCountEl = document.querySelector('.comments-count');
 
 const renderPictureData = (data) => {
@@ -32,52 +33,53 @@ const createCommentEl = ({avatar, name, message}) => {
   return commentItem;
 };
 
-const resetComments = (resetParameter) => {
-  commentsCountEl.textContent = resetParameter;
-  showCommentsCountEl.textContent = resetParameter;
+const resetComments = (reset) => {
+  commentsCountEl.textContent = reset;
+  showCommentsCount.textContent = reset;
 
-  commentsCount = resetParameter;
-  commentsArr = [];
+  commentsCount = reset;
+  activeComments = [];
 
   commentsWrapper.innerHTML = '';
 };
 
-const renderComments = (comments) => {
-  if (commentsCount === comments.length) {
-    commentsCountEl.textContent = commentsCount;
-    commentsLoader.classList.add('hidden');
-    return;
-  }
+const renderComments = () => {
+  const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < 5; i++) {
-    commentsWrapper.appendChild(createCommentEl(comments[commentsCount]));
+  for (let i = 0; i < RENDER_COMMENTS_COUNT; i++) {
+    commentsWrapper.appendChild(createCommentEl(activeComments[commentsCount]));
+    commentsCount++;
+    showCommentsCount.textContent = commentsCount;
 
-    if (commentsCount < comments.length) {
-      commentsCount++;
-      showCommentsCountEl.textContent = commentsCount;
-    }
-
-    if (commentsCount === comments.length) {
+    if (commentsCount === activeComments.length) {
       commentsLoader.classList.add('hidden');
       return;
     }
   }
+
+  commentsWrapper.appendChild(fragment);
 };
 
 const onCommentsLoaderClick = () => {
-  renderComments(commentsArr);
+  renderComments();
 };
 
 export const openBigPicture = (currentData) => {
-  commentsArr = currentData.comments;
+  activeComments = currentData.comments;
 
   document.body.classList.add('modal-open');
   bigPicture.classList.remove('hidden');
 
   renderPictureData(currentData);
-  renderComments(commentsArr);
 
-  commentsLoader.addEventListener('click', onCommentsLoaderClick);
+  if (activeComments.length !== 0) {
+    renderComments(activeComments);
+    commentsLoader.addEventListener('click', onCommentsLoaderClick);
+  } else {
+    commentsLoader.classList.add('hidden');
+    commentsCountEl.textContent = commentsCount;
+  }
+
   buttonClose.addEventListener('click', onButtonCloseClick);
   document.addEventListener('keydown', onDocumentKeydown);
 };
@@ -91,7 +93,7 @@ const closeBigPicture = () => {
   buttonClose.removeEventListener('click', onButtonCloseClick);
   document.removeEventListener('keydown', onDocumentKeydown);
 
-  resetComments(RESET_COMMENTS_COUNT);
+  resetComments(DEFAULT_COMMENTS_COUNT);
 };
 
 function onDocumentKeydown(evt) {
