@@ -64,14 +64,14 @@ const onCommentsLoaderClick = () => {
   renderComments();
 };
 
-export const openBigPicture = (currentData) => {
+export const openBigPicture = (data) => {
   document.body.classList.add('modal-open');
   bigPicture.classList.remove('hidden');
 
-  renderPictureData(currentData);
+  renderPictureData(data);
 
-  if (currentData.comments.length) {
-    activeComments = currentData.comments;
+  if (data.comments.length) {
+    activeComments = data.comments;
     renderComments(activeComments);
     commentsLoader.addEventListener('click', onCommentsLoaderClick);
   } else {
