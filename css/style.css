@@ -1408,3 +1408,21 @@ main {
 .hidden {
   display: none;
 }
+
+.img-upload__error-text {
+  font-family: monospace;
+  position: relative;
+  top: -10px;
+  background-color: #d43131;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.img-upload__error-text::after {
+  position: absolute;
+  content: '';
+  top: -20px;
+  left: 291px;
+  border: 10px solid transparent;
+  border-bottom: 10px solid #d43131;
+}
