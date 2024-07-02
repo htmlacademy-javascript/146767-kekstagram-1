@@ -11,12 +11,9 @@ import {
   NAMES
 } from './data.js';
 import {openBigPicture} from './big-picture.js';
-import {onFileInputChange} from './upload-form.js';
 
 const pictureTemplate = document.querySelector('#picture').content;
 const gallery = document.querySelector('.pictures');
-const form = document.querySelector('#upload-select-image');
-const imgUploadButton = form.querySelector('.img-upload__input');
 
 const createComment = (id) => ({
   id,
@@ -83,5 +80,3 @@ const onGalleryClick = (evt) => {
 };
 
 gallery.addEventListener('click', onGalleryClick);
-
-imgUploadButton.addEventListener('change', onFileInputChange);
