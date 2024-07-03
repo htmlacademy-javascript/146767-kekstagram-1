@@ -1,17 +1,12 @@
 import {isEscapeKey} from './utils.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
-const DESCRIPTION_ERROR_TEXT = 'Комментарий не обязателен. Максимальная длина комментария 140 символов';
+const DESCRIPTION_ERROR_TEXT = `Комментарий не обязателен.
+  Максимальная длина комментария ${MAX_DESCRIPTION_LENGTH} символов`;
 const MAX_TAGS_COUNT = 5;
 const TAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
-const TAGS_ERROR_TEXT = `Обратите внимание, что хэш-теги необязательны!
-  Хеш-тег должен начинаться с символа #,
-  не может состоять только из одной решётки
-  и должен содержать только латинские буквы и цифры.
-  Хэш-теги должны разделяться пробелами.
-  Максимальная длина одного хэш-тега 20 символов, включая решётку.
-  Нет повторяющихся тегов.
-  Нельзя указывать больше пяти хэш-тегов`;
+const TAGS_ERROR_TEXT = `Хэш-теги необязательны! Пример хэш-тега: #ХэшТег
+  (длина 1го хэш-тега не более 20 символов, не более 5 хэш-тегов под фотографией).`;
 
 const form = document.querySelector('#upload-select-image');
 const imgUploadForm = form.querySelector('.img-upload__overlay');
@@ -55,12 +50,12 @@ function onButtonCloseClick() {
   closeUploadForm();
 }
 
-const isFildeFocused = () =>
+const isFieldFocused = () =>
   document.activeElement === hashtagsField ||
   document.activeElement === descriptionField;
 
 function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt) && !isFildeFocused()) {
+  if (isEscapeKey(evt) && !isFieldFocused()) {
     evt.preventDefault();
     closeUploadForm();
   }
@@ -75,14 +70,7 @@ const isDescriptionValid = (description) => description.length <= MAX_DESCRIPTIO
 
 const normalizeTags = (tags) => tags.trim().split(' ').filter((tag) => tag.trim().length);
 
-const isSymbolsValid = (tags) => {
-
-  if (tags.length === 0) {
-    return true;
-  }
-
-  return tags.every((tag) => TAG_PATTERN.test(tag));
-};
+const isSymbolsValid = (tags) => tags.length === 0 ? true : tags.every((tag) => TAG_PATTERN.test(tag));
 
 const isTagsCountValid = (tags) => tags.length <= MAX_TAGS_COUNT;
 
@@ -92,7 +80,7 @@ const isTagsUnique = (tags) => {
   return lowerCaseArr.length === new Set(lowerCaseArr).size;
 };
 
-const isValidTags = (tags) => {
+const isTagsValid = (tags) => {
   const tagsArr = normalizeTags(tags);
 
   return isSymbolsValid(tagsArr) && isTagsCountValid(tagsArr) && isTagsUnique(tagsArr);
@@ -106,6 +94,6 @@ pristine.addValidator(
 
 pristine.addValidator(
   hashtagsField,
-  isValidTags,
+  isTagsValid,
   TAGS_ERROR_TEXT
 );
