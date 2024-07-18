@@ -7,13 +7,19 @@ const MAX_TAGS_COUNT = 5;
 const TAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAGS_ERROR_TEXT = `Хэш-теги необязательны! Пример хэш-тега: #ХэшТег
   (длина 1го хэш-тега не более 20 символов, не более 5 хэш-тегов под фотографией).`;
+const DEFAULT_SCALE_VALUE = 100;
+
+let scaleValue = DEFAULT_SCALE_VALUE;
 
 const form = document.querySelector('#upload-select-image');
 const imgUploadForm = form.querySelector('.img-upload__overlay');
+const imgUploadButton = form.querySelector('.img-upload__input');
+const imgUploadPreview = form.querySelector('.img-upload__preview');
+const imgUploadScale = form.querySelector('.img-upload__scale');
 const buttonClose = form.querySelector('.img-upload__cancel');
+const scaleField = form.querySelector('.scale__control--value');
 const descriptionField = form.querySelector('.text__description');
 const hashtagsField = form.querySelector('.text__hashtags');
-const imgUploadButton = form.querySelector('.img-upload__input');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -21,11 +27,25 @@ const pristine = new Pristine(form, {
   errorTextClass: 'img-upload__error-text',
 });
 
+const onButtonZoomClick = (evt) => {
+  if (evt.target.classList.contains('scale__control--smaller') && scaleValue > 25) {
+    scaleValue = scaleValue - 25;
+    scaleField.value = `${scaleValue}%`;
+    imgUploadPreview.style.transform = `scale(${scaleValue / 100})`;
+  } else if (evt.target.classList.contains('scale__control--bigger') && scaleValue < 100) {
+    scaleValue = scaleValue + 25;
+    scaleField.value = `${scaleValue}%`;
+    imgUploadPreview.style.transform = `scale(${scaleValue / 100})`;
+  }
+};
+
 const openUploadForm = () => {
   document.body.classList.add('modal-open');
   imgUploadForm.classList.remove('hidden');
+  scaleField.value = `${DEFAULT_SCALE_VALUE}%`;
 
   buttonClose.addEventListener('click', onButtonCloseClick);
+  imgUploadScale.addEventListener('click', onButtonZoomClick);
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
@@ -33,10 +53,15 @@ const closeUploadForm = () => {
   document.body.classList.remove('modal-open');
   imgUploadForm.classList.add('hidden');
 
+  scaleValue = DEFAULT_SCALE_VALUE;
+  scaleField.value = `${scaleValue}%`;
+  imgUploadPreview.style.transform = `scale(${scaleValue / 100})`;
+
   form.reset();
   pristine.reset();
 
   buttonClose.removeEventListener('click', onButtonCloseClick);
+  imgUploadScale.removeEventListener('click', onButtonZoomClick);
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
