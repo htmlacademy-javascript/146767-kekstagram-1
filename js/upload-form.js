@@ -70,7 +70,7 @@ const isDescriptionValid = (description) => description.length <= MAX_DESCRIPTIO
 
 const normalizeTags = (tags) => tags.trim().split(' ').filter((tag) => tag.trim().length);
 
-const isSymbolsValid = (tags) => tags.length === 0 ? true : tags.every((tag) => TAG_PATTERN.test(tag));
+const isSymbolsValid = (tags) => !tags.length ? true : tags.every((tag) => TAG_PATTERN.test(tag));
 
 const isTagsCountValid = (tags) => tags.length <= MAX_TAGS_COUNT;
 
