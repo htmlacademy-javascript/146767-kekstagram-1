@@ -7,9 +7,12 @@ const MAX_TAGS_COUNT = 5;
 const TAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAGS_ERROR_TEXT = `Хэш-теги необязательны! Пример хэш-тега: #ХэшТег
   (длина 1го хэш-тега не более 20 символов, не более 5 хэш-тегов под фотографией).`;
-const DEFAULT_SCALE_VALUE = 100;
+const DEFAULT_SCALE = 100;
+const MIN_SCALE = 25;
+const MAX_SCALE = 100;
+const SCALE_STEP = 25;
 
-let scaleValue = DEFAULT_SCALE_VALUE;
+let scaleValue = DEFAULT_SCALE;
 
 const form = document.querySelector('#upload-select-image');
 const imgUploadForm = form.querySelector('.img-upload__overlay');
@@ -27,22 +30,26 @@ const pristine = new Pristine(form, {
   errorTextClass: 'img-upload__error-text',
 });
 
+const changeScaleValue = (value) => {
+  scaleField.value = `${value}%`;
+  imgUploadPreview.style.transform = `scale(${value / 100})`;
+};
+
 const onButtonZoomClick = (evt) => {
-  if (evt.target.classList.contains('scale__control--smaller') && scaleValue > 25) {
-    scaleValue = scaleValue - 25;
-    scaleField.value = `${scaleValue}%`;
-    imgUploadPreview.style.transform = `scale(${scaleValue / 100})`;
-  } else if (evt.target.classList.contains('scale__control--bigger') && scaleValue < 100) {
-    scaleValue = scaleValue + 25;
-    scaleField.value = `${scaleValue}%`;
-    imgUploadPreview.style.transform = `scale(${scaleValue / 100})`;
+  if (evt.target.classList.contains('scale__control--smaller') && scaleValue > MIN_SCALE) {
+    scaleValue = scaleValue - SCALE_STEP;
+    changeScaleValue(scaleValue);
+  } else if (evt.target.classList.contains('scale__control--bigger') && scaleValue < MAX_SCALE) {
+    scaleValue = scaleValue + SCALE_STEP;
+    changeScaleValue(scaleValue);
   }
 };
 
 const openUploadForm = () => {
   document.body.classList.add('modal-open');
   imgUploadForm.classList.remove('hidden');
-  scaleField.value = `${DEFAULT_SCALE_VALUE}%`;
+
+  changeScaleValue(DEFAULT_SCALE);
 
   buttonClose.addEventListener('click', onButtonCloseClick);
   imgUploadScale.addEventListener('click', onButtonZoomClick);
@@ -53,9 +60,8 @@ const closeUploadForm = () => {
   document.body.classList.remove('modal-open');
   imgUploadForm.classList.add('hidden');
 
-  scaleValue = DEFAULT_SCALE_VALUE;
-  scaleField.value = `${scaleValue}%`;
-  imgUploadPreview.style.transform = `scale(${scaleValue / 100})`;
+  scaleValue = DEFAULT_SCALE;
+  changeScaleValue(DEFAULT_SCALE);
 
   form.reset();
   pristine.reset();
