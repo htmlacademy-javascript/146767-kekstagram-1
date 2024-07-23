@@ -1,4 +1,6 @@
 import {isEscapeKey} from './utils.js';
+import {onEffectsChange, resetEffects} from './effects.js';
+import {onButtonZoomClick, resetScaleValue} from './scale.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
 const DESCRIPTION_ERROR_TEXT = `Комментарий не обязателен.
@@ -10,10 +12,12 @@ const TAGS_ERROR_TEXT = `Хэш-теги необязательны! Приме�
 
 const form = document.querySelector('#upload-select-image');
 const imgUploadForm = form.querySelector('.img-upload__overlay');
+const imgUploadButton = form.querySelector('.img-upload__input');
+const imgUploadScale = form.querySelector('.img-upload__scale');
 const buttonClose = form.querySelector('.img-upload__cancel');
+const effectsFilters = form.querySelector('.effects');
 const descriptionField = form.querySelector('.text__description');
 const hashtagsField = form.querySelector('.text__hashtags');
-const imgUploadButton = form.querySelector('.img-upload__input');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -26,6 +30,8 @@ const openUploadForm = () => {
   imgUploadForm.classList.remove('hidden');
 
   buttonClose.addEventListener('click', onButtonCloseClick);
+  imgUploadScale.addEventListener('click', onButtonZoomClick);
+  effectsFilters.addEventListener('click', onEffectsChange);
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
@@ -35,8 +41,12 @@ const closeUploadForm = () => {
 
   form.reset();
   pristine.reset();
+  resetEffects();
+  resetScaleValue();
 
   buttonClose.removeEventListener('click', onButtonCloseClick);
+  imgUploadScale.removeEventListener('click', onButtonZoomClick);
+  effectsFilters.removeEventListener('click', onEffectsChange);
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
@@ -70,7 +80,7 @@ const isDescriptionValid = (description) => description.length <= MAX_DESCRIPTIO
 
 const normalizeTags = (tags) => tags.trim().split(' ').filter((tag) => tag.trim().length);
 
-const isSymbolsValid = (tags) => tags.length === 0 ? true : tags.every((tag) => TAG_PATTERN.test(tag));
+const isSymbolsValid = (tags) => !tags.length ? true : tags.every((tag) => TAG_PATTERN.test(tag));
 
 const isTagsCountValid = (tags) => tags.length <= MAX_TAGS_COUNT;
 
