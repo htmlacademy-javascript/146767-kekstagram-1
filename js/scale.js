@@ -15,13 +15,21 @@ const changeScaleValue = (value) => {
 };
 
 export const onButtonZoomClick = (evt) => {
-  if (evt.target.classList.contains('scale__control--smaller') && scaleValue > MIN_SCALE) {
-    scaleValue = scaleValue - SCALE_STEP;
-    changeScaleValue(scaleValue);
-  } else if (evt.target.classList.contains('scale__control--bigger') && scaleValue < MAX_SCALE) {
-    scaleValue = scaleValue + SCALE_STEP;
-    changeScaleValue(scaleValue);
+  const reduce = evt.target.classList.contains('scale__control--smaller');
+  const increase = evt.target.classList.contains('scale__control--bigger');
+
+  switch (true) {
+    case reduce && scaleValue > MIN_SCALE:
+      scaleValue = scaleValue - SCALE_STEP;
+      break;
+    case increase && scaleValue < MAX_SCALE:
+      scaleValue = scaleValue + SCALE_STEP;
+      break;
+    default:
+      break;
   }
+
+  changeScaleValue(scaleValue);
 };
 
 export const resetScaleValue = () => {
