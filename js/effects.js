@@ -1,45 +1,40 @@
-const EFFECTS = [
-  {
-    name: 'none',
+const EFFECTS = {
+  none: {
     style: 'none',
     min: 0,
     max: 100,
     step: 1,
     unit: ''
   },
-  {
-    name: 'chrome',
+  chrome: {
     style: 'grayscale',
     min: 0,
     max: 1,
     step: 0.1,
     unit: ''
   },
-  {
-    name: 'sepia',
+  sepia: {
     style: 'sepia',
     min: 0,
     max: 1,
     step: 0.1,
     unit: ''
   },
-  {
-    name: 'marvin',
+  marvin: {
     style: 'invert',
     min: 0,
     max: 100,
     step: 1,
     unit: '%'
   },
-  {
-    name: 'phobos',
+  phobos: {
     style: 'blur',
     min: 0,
     max: 3,
     step: 0.1,
     unit: 'px'
   },
-  {
+  heat: {
     name: 'heat',
     style: 'brightness',
     min: 1,
@@ -47,8 +42,8 @@ const EFFECTS = [
     step: 0.1,
     unit: ''
   }
-];
-const DEFAULT_EFFECT = EFFECTS[0];
+};
+const DEFAULT_EFFECT = EFFECTS.none;
 
 let chosenEffect = DEFAULT_EFFECT;
 
@@ -61,13 +56,10 @@ const imgUploadPreview = form.querySelector('img');
 
 const isDefault = () => chosenEffect === DEFAULT_EFFECT;
 
-const showSlider = () => {
-  sliderWrapper.classList.remove('hidden');
-};
-
-const hideSlider = () => {
-  sliderWrapper.classList.add('hidden');
-};
+const sliderDisplaySwitch = (displayed) =>
+  displayed
+    ? sliderWrapper.classList.add('hidden')
+    : sliderWrapper.classList.remove('hidden');
 
 const updateSlider = () => {
   slider.noUiSlider.updateOptions({
@@ -78,35 +70,43 @@ const updateSlider = () => {
     start: chosenEffect.max,
     step: chosenEffect.step,
   });
-
-  if (isDefault()) {
-    hideSlider();
-  } else {
-    showSlider();
-  }
 };
+
+export const resetEffects = () => {
+  chosenEffect = DEFAULT_EFFECT;
+
+  imgUploadPreview.style.filter = `${chosenEffect.style}`;
+
+  updateSlider();
+  sliderDisplaySwitch(isDefault);
+};
+
+const findEffectKey = (effect) => Object.keys(EFFECTS).find((key) => key === effect);
 
 export const onEffectsChange = (evt) => {
   if (!evt.target.classList.contains('effects__radio')) {
     return;
   }
 
-  chosenEffect = EFFECTS.find((effect) => effect.name === evt.target.value);
-  imgUploadPreview.className = `effects__preview--${chosenEffect.name}`;
+  const effect = findEffectKey(evt.target.value);
+
+  chosenEffect = EFFECTS[effect];
+  imgUploadPreview.className = `effects__preview--${effect}`;
+
+  if (chosenEffect === DEFAULT_EFFECT) {
+    resetEffects();
+    return;
+  }
+
   updateSlider();
+  sliderDisplaySwitch(isDefault());
 };
 
 const onSliderUpdate = () => {
   const sliderValue = slider.noUiSlider.get();
-  imgUploadPreview.style.filter = isDefault()
-    ? DEFAULT_EFFECT.style
-    : `${chosenEffect.style}(${sliderValue}${chosenEffect.unit})`;
-  effectValue.value = sliderValue;
-};
 
-export const resetEffects = () => {
-  chosenEffect = DEFAULT_EFFECT;
-  updateSlider();
+  imgUploadPreview.style.filter = `${chosenEffect.style}(${sliderValue}${chosenEffect.unit})`;
+  effectValue.value = sliderValue;
 };
 
 noUiSlider.create(slider, {
@@ -121,5 +121,3 @@ noUiSlider.create(slider, {
 
 effectsFilters.addEventListener('change', onEffectsChange);
 slider.noUiSlider.on('update', onSliderUpdate);
-
-hideSlider();
