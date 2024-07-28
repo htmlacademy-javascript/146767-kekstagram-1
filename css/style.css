@@ -1426,3 +1426,8 @@ main {
   border: 10px solid transparent;
   border-bottom: 10px solid #d43131;
 }
+
+.error_text {
+  margin-bottom: 40px;
+  opacity: 0.3;
+}
