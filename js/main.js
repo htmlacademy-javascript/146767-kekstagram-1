@@ -1,3 +1,4 @@
+import {showMessageError} from './utils.js';
 import {renderGallery} from './gallery.js';
 import {getData} from './upload-send-data.js';
 import './upload-form.js';
@@ -7,6 +8,6 @@ getData()
     renderGallery(photos);
   })
   .catch((error) => {
-    console.log(error);
+    showMessageError(error.message);
   });
 
