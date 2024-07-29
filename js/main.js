@@ -1,13 +1,14 @@
-import {showMessageError} from './utils.js';
+import {showAlertMessage} from './utils.js';
 import {renderGallery} from './gallery.js';
-import {getData} from './upload-send-data.js';
-import './upload-form.js';
+import {getData, ErrorText} from './upload-send-data.js';
+import {setUserFormSubmit, closeUploadForm} from './upload-form.js';
 
 getData()
   .then((photos) => {
     renderGallery(photos);
   })
-  .catch((error) => {
-    showMessageError(error.message);
+  .catch(() => {
+    showAlertMessage(ErrorText.GET_DATA, ErrorText.STATUS);
   });
 
+setUserFormSubmit(closeUploadForm);
