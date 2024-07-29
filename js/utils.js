@@ -51,7 +51,7 @@ export const showAlertMessage = (message, status) => {
   document.body.appendChild(template);
 
   const interval = setInterval(() => {
-    countDown -= 1;
+    --countDown;
     output.textContent = `(${countDown})`;
 
     if (countDown === 0) {

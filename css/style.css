@@ -1443,8 +1443,8 @@ main {
   color: #ffffff;
 }
 
-.error_text,
-.success_text {
+.error__text,
+.success__text {
   margin-bottom: 40px;
   opacity: 0.3;
 }
