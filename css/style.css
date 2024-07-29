@@ -1427,7 +1427,24 @@ main {
   border-bottom: 10px solid #d43131;
 }
 
-.error_text {
+.error__button {
+  color: #ffe753;
+  padding: 15px 20px;
+  border: 1px solid #ffe753;
+}
+.success__button {
+  color: #ffffff;
+  padding: 15px 20px;
+  border: 1px solid #ffffff;
+}
+
+.success__inner {
+  background-color: #163c14;
+  color: #ffffff;
+}
+
+.error_text,
+.success_text {
   margin-bottom: 40px;
   opacity: 0.3;
 }
