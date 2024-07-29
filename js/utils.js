@@ -1,41 +1,64 @@
 const ALERT_SHOW_TIME = 5000;
-const BUTTON_TEXT = 'Попробовать ещё раз';
-
-export const isEscapeKey = (evt) => evt.key === 'Escape';
+const BUTTON_ERROR_TEXT = 'Обновить страницу';
+const BUTTON_SUCCESS_TEXT = 'Круто!';
 
 const errorTemplate = document.querySelector('#error').content;
-const error = errorTemplate.cloneNode(true);
-const output = error.querySelector('output');
-const errorEl = error.querySelector('.error');
-const errorTitle = error.querySelector('.error__title');
-const errorButton = error.querySelector('.error__button');
+const successTemplate = document.querySelector('#success').content;
 
-errorTitle.style.lineHeight = 'normal';
+export const showAlertMessage = (message, status) => {
+  let countDown = ALERT_SHOW_TIME / 1000;
+  let template;
+  let output;
+  let alertEl;
+  let title;
+  let button;
 
-let countDown = ALERT_SHOW_TIME / 1000;
+  if (status === false) {
+    template = errorTemplate.cloneNode(true);
+    output = template.querySelector('output');
+    alertEl = template.querySelector('.error');
+    title = template.querySelector('.error__title');
+    button = template.querySelector('.error__button');
 
-const getCountDown = setInterval(() => {
-  output.textContent = --countDown;
+    button.textContent = BUTTON_ERROR_TEXT;
 
-  if (countDown === 0) {
-    countDown = ALERT_SHOW_TIME / 1000;
-
-    clearInterval(getCountDown);
+    button.addEventListener('click', () => {
+      location.reload();
+    });
   }
-}, 1000);
 
-export const showMessageError = (message) => {
-  errorTitle.textContent = message;
-  errorButton.textContent = BUTTON_TEXT;
-  output.textContent = countDown;
+  if (status === true) {
+    let degrees = 0;
 
-  document.body.appendChild(error);
+    template = successTemplate.cloneNode(true);
+    output = template.querySelector('output');
+    alertEl = template.querySelector('.success');
+    title = template.querySelector('.success__title');
+    button = template.querySelector('.success__button');
 
-  errorButton.addEventListener('click', () => {
-    location.reload();
-  });
+    button.textContent = BUTTON_SUCCESS_TEXT;
 
-  setTimeout(() => {
-    errorEl.remove();
-  }, ALERT_SHOW_TIME);
+    button.addEventListener('click', () => {
+      button.style.transform = `rotateY(${degrees += 180}deg)`;
+      button.style.transition = 'transform 1s ease-in-out';
+    });
+  }
+
+  title.style.lineHeight = 'normal';
+  title.textContent = message;
+  output.textContent = `(${countDown})`;
+
+  document.body.appendChild(template);
+
+  const interval = setInterval(() => {
+    countDown -= 1;
+    output.textContent = `(${countDown})`;
+
+    if (countDown === 0) {
+      clearInterval(interval);
+      alertEl.remove();
+    }
+  }, 1000);
 };
+
+export const isEscapeKey = (evt) => evt.key === 'Escape';
