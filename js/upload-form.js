@@ -1,6 +1,7 @@
-import {isEscapeKey} from './utils.js';
+import {isEscapeKey, showAlertMessage} from './utils.js';
 import {resetEffects} from './effects.js';
 import {resetScaleValue} from './scale.js';
+import {sendData, SuccessText, ErrorText} from './upload-send-data.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
 const DESCRIPTION_ERROR_TEXT = `Комментарий не обязателен.
@@ -10,12 +11,18 @@ const TAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAGS_ERROR_TEXT = `Хэш-теги необязательны! Пример хэш-тега: #ХэшТег
   (длина 1го хэш-тега не более 20 символов, не более 5 хэш-тегов под фотографией).`;
 
+const SubmitButtonText = {
+  IDLE: 'Сохранить',
+  SENDING: 'Сохраняю...'
+};
+
 const form = document.querySelector('#upload-select-image');
 const imgUploadForm = form.querySelector('.img-upload__overlay');
 const imgUploadButton = form.querySelector('.img-upload__input');
 const buttonClose = form.querySelector('.img-upload__cancel');
 const descriptionField = form.querySelector('.text__description');
 const hashtagsField = form.querySelector('.text__hashtags');
+const submitButton = form.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -31,7 +38,7 @@ const openUploadForm = () => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-const closeUploadForm = () => {
+export const closeUploadForm = () => {
   document.body.classList.remove('modal-open');
   imgUploadForm.classList.add('hidden');
 
@@ -65,11 +72,6 @@ function onDocumentKeydown(evt) {
   }
 }
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
-
 const isDescriptionValid = (description) => description.length <= MAX_DESCRIPTION_LENGTH;
 
 const normalizeTags = (tags) => tags.trim().split(' ').filter((tag) => tag.trim().length);
@@ -101,3 +103,34 @@ pristine.addValidator(
   isTagsValid,
   TAGS_ERROR_TEXT
 );
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+export const setUserFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      blockSubmitButton();
+      sendData(new FormData(evt.target))
+        .then(onSuccess)
+        .then(() => {
+          showAlertMessage(SuccessText.SEND_DATA, SuccessText.STATUS);
+        })
+        .catch(() => {
+          showAlertMessage(ErrorText.SEND_DATA, ErrorText.STATUS);
+        })
+        .finally(unblockSubmitButton);
+    }
+  });
+};
