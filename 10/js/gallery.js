@@ -19,7 +19,7 @@ const createPictureEl = ({id, url, likes, comments}) => {
   return picture;
 };
 
-export const renderGallery = (photos) => {
+const renderGallery = (photos) => {
   const fragment = document.createDocumentFragment();
 
   photos.forEach((photo) => {
@@ -28,7 +28,12 @@ export const renderGallery = (photos) => {
 
   gallery.appendChild(fragment);
 
+};
+
+export const initGallery = (photos) => {
   photosDataArr = photos;
+
+  renderGallery(photosDataArr);
 };
 
 const onGalleryClick = (evt) => {
