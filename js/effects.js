@@ -100,7 +100,7 @@ const onEffectsChange = (evt) => {
   }
 
   updateSlider();
-  toggleSliderVisiability(isDefault());
+  toggleSliderVisiability(false);
 };
 
 const onSliderUpdate = () => {
