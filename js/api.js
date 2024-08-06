@@ -1,4 +1,5 @@
 const BASE_URL = 'https://28.javascript.htmlacademy.pro/kekstagram';
+
 const Route = {
   GET_DATA: '/data',
   SEND_DATA: '/',
@@ -6,14 +7,6 @@ const Route = {
 const Method = {
   GET: 'GET',
   POST: 'POST',
-};
-export const ErrorText = {
-  GET_DATA: 'Не удалось загрузить данные. Попробуйте обновить страницу',
-  SEND_DATA: 'Не удалось отправить форму. Попробуйте ещё раз',
-};
-
-export const SuccessText = {
-  SEND_DATA: 'Форма успешно отправлена!',
 };
 
 const load = (route, method = Method.GET, body = null) =>
