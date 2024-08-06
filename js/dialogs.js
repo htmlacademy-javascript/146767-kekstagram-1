@@ -1,27 +1,24 @@
 import {isEscapeKey} from './utils.js';
 
-const ALERT_SHOW_TIME = 5000;
+const ALERT_SHOW_TIME = 5;
 
-let countDown = ALERT_SHOW_TIME / 1000;
+let countDown = ALERT_SHOW_TIME;
 let activeDialog = null;
 
 const errorDialogTemplate =
   document
     .querySelector('#error')
     .content
-    .cloneNode(true)
     .querySelector('.error');
 const successDialogTemplate =
   document
     .querySelector('#success')
     .content
-    .cloneNode(true)
     .querySelector('.success');
 const errorAlertTemplate =
   document
     .querySelector('#alert')
     .content
-    .cloneNode(true)
     .querySelector('.alert');
 
 const closeDialog = () => {
@@ -43,42 +40,35 @@ const closeAfterTimeout = (counter) => {
   counter.textContent = `(${countDown})`;
 
   const interval = setInterval(() => {
-    countDown -= 1;
+    countDown--;
     counter.textContent = `(${countDown})`;
 
     if (countDown === 0) {
       clearInterval(interval);
-      if (activeDialog) {
-        activeDialog.remove();
-      }
+      activeDialog.remove();
     }
   }, 1000);
 };
 
-const renderTemplate = (template) => {
-  document.body.appendChild(template);
-  activeDialog = template;
-};
-
 const openDialog = (template) => {
-  const button = template.querySelector('button');
+  const dialogItem = template.cloneNode(true);
+  const button = dialogItem.querySelector('button');
 
-  renderTemplate(template);
+  document.body.appendChild(dialogItem);
+  activeDialog = dialogItem;
 
-  button.addEventListener('click', closeDialog);
+  button.addEventListener('click', () => closeDialog());
   document.addEventListener('keydown', onDocumentKeydown, true);
 };
 
 const openAlert = (template) => {
-  const button = template.querySelector('button');
-  const output = template.querySelector('output');
+  const alertItem = template.cloneNode(true);
+  const output = alertItem.querySelector('output');
 
-  renderTemplate(template);
+  document.body.appendChild(alertItem);
+  activeDialog = alertItem;
 
   closeAfterTimeout(output);
-
-  button.addEventListener('click', () => (location.reload()));
-  document.addEventListener('keydown', onDocumentKeydown, true);
 };
 
 export const showSuccessDialog = () => openDialog(successDialogTemplate);
