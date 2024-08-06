@@ -1,40 +1,88 @@
 import {isEscapeKey} from './utils.js';
 
-export const ERROR_CLASS = 'error';
-export const SUCCESS_CLASS = 'success';
-export const BUTTON_ERROR_TEXT = 'Закрыть окно';
-export const BUTTON_SUCCESS_TEXT = 'Круто! <3';
+const ALERT_SHOW_TIME = 5000;
 
-export const errorTemplate = document.querySelector('#error').content;
-export const successTemplate = document.querySelector('#success').content;
+let countDown = ALERT_SHOW_TIME / 1000;
+let activeDialog = null;
 
-let alertEl = undefined;
+const errorDialogTemplate =
+  document
+    .querySelector('#error')
+    .content
+    .cloneNode(true)
+    .querySelector('.error');
+const successDialogTemplate =
+  document
+    .querySelector('#success')
+    .content
+    .cloneNode(true)
+    .querySelector('.success');
+const errorAlertTemplate =
+  document
+    .querySelector('#alert')
+    .content
+    .cloneNode(true)
+    .querySelector('.alert');
 
-export const showAlertMessage = (message, buttonText, template, status) => {
-  const templateEl = template.cloneNode(true);
-  alertEl = templateEl.querySelector(`.${status}`);
-  const title = templateEl.querySelector(`.${status}__title`);
-  const button = templateEl.querySelector(`.${status}__button`);
+const closeDialog = () => {
+  activeDialog.remove();
+  activeDialog = null;
 
-  title.style.lineHeight = 'normal';
-  title.textContent = message;
-  button.textContent = buttonText;
-
-  document.body.appendChild(templateEl);
-
-  button.addEventListener('click', () => {
-    alertEl.remove();
-    alertEl = undefined;
-  });
-
+  document.removeEventListener('keydown', onDocumentKeydown, true);
 };
 
-document.addEventListener('keydown', (evt) => {
-  if (isEscapeKey(evt) && (alertEl !== undefined)) {
-    evt.stopImmediatePropagation();
+function onDocumentKeydown(evt) {
+  if (isEscapeKey(evt) && activeDialog) {
+    evt.stopPropagation();
 
-    alertEl.remove();
+    closeDialog();
   }
+}
 
-  alertEl = undefined;
-});
+const closeAfterTimeout = (counter) => {
+  counter.textContent = `(${countDown})`;
+
+  const interval = setInterval(() => {
+    countDown -= 1;
+    counter.textContent = `(${countDown})`;
+
+    if (countDown === 0) {
+      clearInterval(interval);
+      if (activeDialog) {
+        activeDialog.remove();
+      }
+    }
+  }, 1000);
+};
+
+const renderTemplate = (template) => {
+  document.body.appendChild(template);
+  activeDialog = template;
+};
+
+const openDialog = (template) => {
+  const button = template.querySelector('button');
+
+  renderTemplate(template);
+
+  button.addEventListener('click', closeDialog);
+  document.addEventListener('keydown', onDocumentKeydown, true);
+};
+
+const openAlert = (template) => {
+  const button = template.querySelector('button');
+  const output = template.querySelector('output');
+
+  renderTemplate(template);
+
+  closeAfterTimeout(output);
+
+  button.addEventListener('click', () => (location.reload()));
+  document.addEventListener('keydown', onDocumentKeydown, true);
+};
+
+export const showSuccessDialog = () => openDialog(successDialogTemplate);
+
+export const showErrorDialog = () => openDialog(errorDialogTemplate);
+
+export const showErrorAlert = () => openAlert(errorAlertTemplate);
