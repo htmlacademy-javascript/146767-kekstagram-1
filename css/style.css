@@ -1277,7 +1277,6 @@ main {
           transform: translateX(-50%);
 }
 
-.alert__button,
 .error__button,
 .success__button {
   padding: 5px 10px;
@@ -1290,8 +1289,6 @@ main {
   border-radius: 5px;
 }
 
-.alert__button:hover,
-.alert__button:focus,
 .error__button:hover,
 .error__button:focus,
 .success__button:hover,
@@ -1299,7 +1296,6 @@ main {
   opacity: 0.8;
 }
 
-.alert__button:active,
 .error__button:active,
 .success__button:active {
   opacity: 0.6;
@@ -1445,14 +1441,9 @@ main {
   opacity: 0.8;
 }
 
-.alert__button,
 .success__button,
 .error__button {
   padding: 16px 20px;
-}
-
-.alert__button {
-  border: 1px solid #ffffff;
 }
 
 .error__button {
