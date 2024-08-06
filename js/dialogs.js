@@ -1,8 +1,8 @@
 import {isEscapeKey} from './utils.js';
 
-const ALERT_SHOW_TIME = 5;
+const SECONDS_TO_CLOSE = 5;
+const UPDATE_INTERVAL = 1000;
 
-let countDown = ALERT_SHOW_TIME;
 let activeDialog = null;
 
 const errorDialogTemplate =
@@ -36,39 +36,37 @@ function onDocumentKeydown(evt) {
   }
 }
 
-const closeAfterTimeout = (counter) => {
-  counter.textContent = `(${countDown})`;
+const closeAfterTimeout = (output, secondsToClose) => {
+  output.textContent = `(${secondsToClose})`;
 
   const interval = setInterval(() => {
-    countDown--;
-    counter.textContent = `(${countDown})`;
+    secondsToClose--;
+    output.textContent = `(${secondsToClose})`;
 
-    if (countDown === 0) {
+    if (secondsToClose === 0) {
       clearInterval(interval);
-      activeDialog.remove();
+      closeDialog();
     }
-  }, 1000);
+  }, UPDATE_INTERVAL);
 };
 
 const openDialog = (template) => {
-  const dialogItem = template.cloneNode(true);
-  const button = dialogItem.querySelector('button');
+  activeDialog = template.cloneNode(true);
+  const button = activeDialog.querySelector('button');
 
-  document.body.appendChild(dialogItem);
-  activeDialog = dialogItem;
+  document.body.appendChild(activeDialog);
 
   button.addEventListener('click', () => closeDialog());
   document.addEventListener('keydown', onDocumentKeydown, true);
 };
 
 const openAlert = (template) => {
-  const alertItem = template.cloneNode(true);
-  const output = alertItem.querySelector('output');
+  activeDialog = template.cloneNode(true);
+  const output = activeDialog.querySelector('output');
 
-  document.body.appendChild(alertItem);
-  activeDialog = alertItem;
+  document.body.appendChild(activeDialog);
 
-  closeAfterTimeout(output);
+  closeAfterTimeout(output, SECONDS_TO_CLOSE);
 };
 
 export const showSuccessDialog = () => openDialog(successDialogTemplate);
