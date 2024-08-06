@@ -1197,6 +1197,7 @@ main {
  * Экраны ошибки и успеха загрузки изображения
  */
 
+.alert,
 .error,
 .success {
   position: fixed;
@@ -1213,6 +1214,7 @@ main {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
+.alert__inner,
 .error__inner,
 .success__inner {
   position: relative;
@@ -1250,6 +1252,7 @@ main {
   font-size: 32px;
 }
 
+.alert__title,
 .success__title {
   margin: 0;
   margin-bottom: 50px;
@@ -1425,4 +1428,40 @@ main {
   left: 291px;
   border: 10px solid transparent;
   border-bottom: 10px solid #d43131;
+}
+
+.alert__title,
+.success__title,
+.error__title {
+  line-height: normal;
+}
+
+.alert__text {
+  margin-bottom: 40px;
+  opacity: 0.8;
+}
+
+.success__button,
+.error__button {
+  padding: 16px 20px;
+}
+
+.error__button {
+  color: #ffe753;
+  border: 1px solid #ffe753;
+}
+
+.success__button {
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+.alert__inner {
+  background-color: #690b0b;
+  color: #eeeeee;
+}
+
+.success__inner {
+  background-color: #163c14;
+  color: #ffffff;
 }

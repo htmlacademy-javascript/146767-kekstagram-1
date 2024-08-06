@@ -1,43 +1,9 @@
-import {getRandomInteger, getRandomArrElement} from './utils.js';
-import {
-  MIN_LIKES,
-  MAX_LIKES,
-  MIN_COMMENTS,
-  MAX_COMMENTS,
-  PICTURE_COUNT,
-  AVATAR_COUNT,
-  MESSAGES,
-  PHOTO_DESCRIPTIONS,
-  NAMES
-} from './data.js';
 import {openBigPicture} from './big-picture.js';
+
+let photosDataArr = [];
 
 const pictureTemplate = document.querySelector('#picture').content;
 const gallery = document.querySelector('.pictures');
-
-const createComment = (id) => ({
-  id,
-  avatar: `img/avatar-${getRandomInteger(1, AVATAR_COUNT)}.svg`,
-  message: getRandomArrElement(MESSAGES),
-  name: getRandomArrElement(NAMES),
-});
-
-const createPicture = (id) => ({
-  id,
-  url: `photos/${id}.jpg`,
-  description: getRandomArrElement(PHOTO_DESCRIPTIONS),
-  likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
-  comments: Array.from(
-    { length: getRandomInteger(MIN_COMMENTS, MAX_COMMENTS) },
-    (_, comentIndex) =>
-      createComment(comentIndex + 1)
-  ),
-});
-
-const createGallery = () =>
-  Array.from({ length: PICTURE_COUNT }, (_, pictureIndex) =>
-    createPicture(pictureIndex + 1)
-  );
 
 const createPictureEl = ({id, url, likes, comments}) => {
   const picture = pictureTemplate.cloneNode(true);
@@ -61,11 +27,14 @@ const renderGallery = (photos) => {
   });
 
   gallery.appendChild(fragment);
+
 };
 
-const createGalleryData = createGallery();
+export const initGallery = (photos) => {
+  photosDataArr = photos;
 
-renderGallery(createGalleryData);
+  renderGallery(photosDataArr);
+};
 
 const onGalleryClick = (evt) => {
   const imgEl = evt.target.matches('.picture__img');
@@ -74,7 +43,7 @@ const onGalleryClick = (evt) => {
     return;
   }
 
-  const currentData = createGalleryData.find(({id}) => id === +evt.target.dataset.id);
+  const currentData = photosDataArr.find(({id}) => id === +evt.target.dataset.id);
 
   openBigPicture(currentData);
 };

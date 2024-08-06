@@ -1,3 +1,5 @@
+import {resetScaleValue} from './scale.js';
+
 const EFFECTS = {
   none: {
     style: 'none',
@@ -45,7 +47,7 @@ const EFFECTS = {
 };
 const DEFAULT_EFFECT = EFFECTS.none;
 
-let chosenEffect = DEFAULT_EFFECT;
+let activeEffect = DEFAULT_EFFECT;
 
 const form = document.querySelector('#upload-select-image');
 const slider = form.querySelector('.effect-level__slider');
@@ -54,58 +56,57 @@ const effectsFilters = form.querySelector('.effects');
 const effectValue = form.querySelector('.effect-level__value');
 const imgUploadPreview = form.querySelector('img');
 
-const isDefault = () => chosenEffect === DEFAULT_EFFECT;
+const isDefault = () => activeEffect === DEFAULT_EFFECT;
 
-const sliderDisplaySwitch = (displayed) =>
-  displayed
+const toggleSliderVisiability = (isVisible) =>
+  isVisible
     ? sliderWrapper.classList.add('hidden')
     : sliderWrapper.classList.remove('hidden');
 
 const updateSlider = () => {
   slider.noUiSlider.updateOptions({
     range: {
-      min: chosenEffect.min,
-      max: chosenEffect.max,
+      min: activeEffect.min,
+      max: activeEffect.max,
     },
-    start: chosenEffect.max,
-    step: chosenEffect.step,
+    start: activeEffect.max,
+    step: activeEffect.step,
   });
 };
 
 export const resetEffects = () => {
-  chosenEffect = DEFAULT_EFFECT;
+  activeEffect = DEFAULT_EFFECT;
 
-  imgUploadPreview.style.filter = `${chosenEffect.style}`;
+  imgUploadPreview.style.filter = `${DEFAULT_EFFECT.style}`;
 
   updateSlider();
-  sliderDisplaySwitch(isDefault);
+  toggleSliderVisiability(isDefault);
 };
 
-const findEffectKey = (effect) => Object.keys(EFFECTS).find((key) => key === effect);
-
-export const onEffectsChange = (evt) => {
+const onEffectsChange = (evt) => {
   if (!evt.target.classList.contains('effects__radio')) {
     return;
   }
 
-  const effect = findEffectKey(evt.target.value);
+  const effect = evt.target.value;
 
-  chosenEffect = EFFECTS[effect];
+  activeEffect = EFFECTS[effect] ?? EFFECTS.none;
   imgUploadPreview.className = `effects__preview--${effect}`;
 
-  if (chosenEffect === DEFAULT_EFFECT) {
+  if (activeEffect === DEFAULT_EFFECT) {
     resetEffects();
+    resetScaleValue();
     return;
   }
 
   updateSlider();
-  sliderDisplaySwitch(isDefault());
+  toggleSliderVisiability(false);
 };
 
 const onSliderUpdate = () => {
   const sliderValue = slider.noUiSlider.get();
 
-  imgUploadPreview.style.filter = `${chosenEffect.style}(${sliderValue}${chosenEffect.unit})`;
+  imgUploadPreview.style.filter = `${activeEffect.style}(${sliderValue}${activeEffect.unit})`;
   effectValue.value = sliderValue;
 };
 
@@ -119,5 +120,6 @@ noUiSlider.create(slider, {
   connect: 'lower',
 });
 
+effectsFilters.addEventListener('click', onEffectsChange);
 effectsFilters.addEventListener('change', onEffectsChange);
 slider.noUiSlider.on('update', onSliderUpdate);

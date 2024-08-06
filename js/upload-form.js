@@ -1,6 +1,8 @@
 import {isEscapeKey} from './utils.js';
-import {onEffectsChange, resetEffects} from './effects.js';
-import {onButtonZoomClick, resetScaleValue} from './scale.js';
+import {resetEffects} from './effects.js';
+import {resetScaleValue} from './scale.js';
+import {sendData} from './api.js';
+import {showSuccessDialog, showErrorDialog} from './dialogs.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
 const DESCRIPTION_ERROR_TEXT = `Комментарий не обязателен.
@@ -10,14 +12,18 @@ const TAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAGS_ERROR_TEXT = `Хэш-теги необязательны! Пример хэш-тега: #ХэшТег
   (длина 1го хэш-тега не более 20 символов, не более 5 хэш-тегов под фотографией).`;
 
+const SubmitButtonText = {
+  IDLE: 'Сохранить',
+  SENDING: 'Сохраняю...'
+};
+
 const form = document.querySelector('#upload-select-image');
 const imgUploadForm = form.querySelector('.img-upload__overlay');
 const imgUploadButton = form.querySelector('.img-upload__input');
-const imgUploadScale = form.querySelector('.img-upload__scale');
 const buttonClose = form.querySelector('.img-upload__cancel');
-const effectsFilters = form.querySelector('.effects');
 const descriptionField = form.querySelector('.text__description');
 const hashtagsField = form.querySelector('.text__hashtags');
+const submitButton = form.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -30,8 +36,6 @@ const openUploadForm = () => {
   imgUploadForm.classList.remove('hidden');
 
   buttonClose.addEventListener('click', onButtonCloseClick);
-  imgUploadScale.addEventListener('click', onButtonZoomClick);
-  effectsFilters.addEventListener('click', onEffectsChange);
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
@@ -45,8 +49,6 @@ const closeUploadForm = () => {
   resetScaleValue();
 
   buttonClose.removeEventListener('click', onButtonCloseClick);
-  imgUploadScale.removeEventListener('click', onButtonZoomClick);
-  effectsFilters.removeEventListener('click', onEffectsChange);
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
@@ -70,11 +72,6 @@ function onDocumentKeydown(evt) {
     closeUploadForm();
   }
 }
-
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
 
 const isDescriptionValid = (description) => description.length <= MAX_DESCRIPTION_LENGTH;
 
@@ -107,3 +104,29 @@ pristine.addValidator(
   isTagsValid,
   TAGS_ERROR_TEXT
 );
+
+const toggleSubmitButton = (disabled) => {
+  submitButton.disabled = disabled;
+  submitButton.textContent = disabled
+    ? SubmitButtonText.SENDING
+    : SubmitButtonText.IDLE;
+};
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    toggleSubmitButton(true);
+    sendData(new FormData(evt.target))
+      .then(closeUploadForm)
+      .then(() => {
+        showSuccessDialog();
+      })
+      .catch(() => {
+        showErrorDialog();
+      })
+      .finally(() => toggleSubmitButton(false));
+  }
+});
