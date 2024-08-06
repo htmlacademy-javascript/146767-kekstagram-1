@@ -1,9 +1,5 @@
-import {getData, ErrorText} from './api.js';
-import {
-  showAlertMessage,
-  BUTTON_ERROR_TEXT,
-  errorTemplate,
-  ERROR_CLASS} from './dialogs.js';
+import {getData} from './api.js';
+import {showErrorAlert} from './dialogs.js';
 import {initGallery} from './gallery.js';
 import './upload-form.js';
 
@@ -12,9 +8,5 @@ getData()
     initGallery(photos);
   })
   .catch(() => {
-    showAlertMessage(
-      ErrorText.GET_DATA,
-      BUTTON_ERROR_TEXT,
-      errorTemplate,
-      ERROR_CLASS);
+    showErrorAlert();
   });

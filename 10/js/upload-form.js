@@ -1,16 +1,8 @@
 import {isEscapeKey} from './utils.js';
 import {resetEffects} from './effects.js';
 import {resetScaleValue} from './scale.js';
-import {sendData, SuccessText, ErrorText} from './api.js';
-import {
-  showAlertMessage,
-  errorTemplate,
-  successTemplate,
-  BUTTON_ERROR_TEXT,
-  BUTTON_SUCCESS_TEXT,
-  ERROR_CLASS,
-  SUCCESS_CLASS
-} from './dialogs.js';
+import {sendData} from './api.js';
+import {showSuccessDialog, showErrorDialog} from './dialogs.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
 const DESCRIPTION_ERROR_TEXT = `Комментарий не обязателен.
@@ -113,11 +105,12 @@ pristine.addValidator(
   TAGS_ERROR_TEXT
 );
 
-const toggleSubmitButton = (disabled) =>
-  disabled
-    ? (submitButton.disabled = true) + (submitButton.textContent = SubmitButtonText.SENDING)
-    : (submitButton.disabled = false) + (submitButton.textContent = SubmitButtonText.IDLE);
-
+const toggleSubmitButton = (disabled) => {
+  submitButton.disabled = disabled;
+  submitButton.textContent = disabled
+    ? SubmitButtonText.SENDING
+    : SubmitButtonText.IDLE;
+};
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
@@ -129,19 +122,11 @@ form.addEventListener('submit', (evt) => {
     sendData(new FormData(evt.target))
       .then(closeUploadForm)
       .then(() => {
-        showAlertMessage(
-          SuccessText.SEND_DATA,
-          BUTTON_SUCCESS_TEXT,
-          successTemplate,
-          SUCCESS_CLASS);
+        showSuccessDialog();
       })
       .catch(() => {
-        showAlertMessage(
-          ErrorText.SEND_DATA,
-          BUTTON_ERROR_TEXT,
-          errorTemplate,
-          ERROR_CLASS);
+        showErrorDialog();
       })
-      .finally(toggleSubmitButton);
+      .finally(() => toggleSubmitButton(false));
   }
 });
