@@ -3,6 +3,14 @@ import {isEscapeKey} from './utils.js';
 const SECONDS_TO_CLOSE = 5;
 const UPDATE_INTERVAL = 1000;
 
+const ClosingElements = {
+  ERROR: 'error',
+  ERROR_BUTTON: 'error__button',
+  SUCCESS:'success',
+  SUCCESS_BUTTON:'success__button',
+  ALERT: 'alert',
+};
+
 let activeDialog = null;
 
 const errorDialogTemplate =
@@ -28,6 +36,20 @@ const closeDialog = () => {
   document.removeEventListener('keydown', onDocumentKeydown, true);
 };
 
+const onDialogClick = (evt) => {
+  const dialogCloseEl = evt.target.className;
+
+  switch (dialogCloseEl) {
+    case ClosingElements.ERROR:
+    case ClosingElements.ERROR_BUTTON:
+    case ClosingElements.SUCCESS:
+    case ClosingElements.SUCCESS_BUTTON:
+    case ClosingElements.ALERT:
+      closeDialog();
+      break;
+  }
+};
+
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt) && activeDialog) {
     evt.stopPropagation();
@@ -43,20 +65,21 @@ const closeAfterTimeout = (output, secondsToClose) => {
     secondsToClose--;
     output.textContent = `(${secondsToClose})`;
 
-    if (secondsToClose === 0) {
+    if (secondsToClose === 0 || !activeDialog) {
       clearInterval(interval);
-      closeDialog();
+      if (activeDialog) {
+        closeDialog();
+      }
     }
   }, UPDATE_INTERVAL);
 };
 
 const openDialog = (template) => {
   activeDialog = template.cloneNode(true);
-  const button = activeDialog.querySelector('button');
 
   document.body.appendChild(activeDialog);
 
-  button.addEventListener('click', () => closeDialog());
+  activeDialog.addEventListener('click', onDialogClick);
   document.addEventListener('keydown', onDocumentKeydown, true);
 };
 
@@ -67,6 +90,8 @@ const openAlert = (template) => {
   document.body.appendChild(activeDialog);
 
   closeAfterTimeout(output, SECONDS_TO_CLOSE);
+
+  activeDialog.addEventListener('click', onDialogClick);
 };
 
 export const showSuccessDialog = () => openDialog(successDialogTemplate);

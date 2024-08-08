@@ -1,12 +1,18 @@
 import {debounce} from './utils.js';
 import {openBigPicture} from './big-picture.js';
 
+const RANDOM_PHOTOS_COUNT = 10;
 const FILTER_UPDATE_TIME = 500;
 
-let photosDataArr = [];
+const Filters = {
+  FILTER_RANDOM: 'filter-random',
+  FILTER_DISCUSSED: 'filter-discussed',
+};
+
+let galleryData = [];
 
 const pictureTemplate = document.querySelector('#picture').content;
-const gallery = document.querySelector('.pictures');
+const galleryContainer = document.querySelector('.gallery');
 const imgFilters = document.querySelector('.img-filters');
 const imgFiltersForm = document.querySelector('.img-filters__form');
 
@@ -31,38 +37,41 @@ const renderGallery = (photos) => {
     fragment.appendChild(createPictureEl(photo));
   });
 
-  gallery.appendChild(fragment);
-
+  galleryContainer.appendChild(fragment);
 };
 
+const getFilter = (evt) => evt.target.id;
+
 const onFilterClick = (evt) => {
-  const filter = evt.target.id;
-  const photosFilterArr = photosDataArr.slice();
+  let photos = galleryData;
 
-  gallery
-    .querySelectorAll('.picture')
-    .forEach((picture) => picture.remove());
+  if (!getFilter(evt)) {
+    return;
+  }
 
-  switch (filter) {
-    case 'filter-default':
-      renderGallery(photosFilterArr);
+  switch (getFilter(evt)) {
+    case Filters.FILTER_RANDOM:
+      photos = photos
+        .toSorted(() => Math.random() - 0.5)
+        .slice(0, RANDOM_PHOTOS_COUNT);
       break;
-    case 'filter-random':
-      renderGallery(photosFilterArr.sort(() => Math.random() - 0.5).slice(0, 10));
-      break;
-    case 'filter-discussed':
-      renderGallery(photosFilterArr.sort((a, b) => b.comments.length - a.comments.length));
+    case Filters.FILTER_DISCUSSED:
+      photos = photos
+        .toSorted((a, b) => b.comments.length - a.comments.length);
       break;
   }
+
+  galleryContainer.innerHTML = '';
+  renderGallery(photos);
 };
 
 export const initGallery = (photos) => {
-  photosDataArr = photos;
+  galleryData = photos;
 
   imgFilters.classList.remove('img-filters--inactive');
   imgFiltersForm.addEventListener('click', debounce(onFilterClick, FILTER_UPDATE_TIME));
 
-  renderGallery(photosDataArr);
+  renderGallery(galleryData);
 };
 
 const onGalleryClick = (evt) => {
@@ -72,9 +81,9 @@ const onGalleryClick = (evt) => {
     return;
   }
 
-  const currentData = photosDataArr.find(({id}) => id === +evt.target.dataset.id);
+  const currentData = galleryData.find(({id}) => id === +evt.target.dataset.id);
 
   openBigPicture(currentData);
 };
 
-gallery.addEventListener('click', onGalleryClick);
+galleryContainer.addEventListener('click', onGalleryClick);
