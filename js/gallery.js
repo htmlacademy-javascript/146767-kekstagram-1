@@ -40,29 +40,30 @@ const renderGallery = (photos) => {
   galleryContainer.appendChild(fragment);
 };
 
-const getFilter = (evt) => evt.target.id;
-
 const onFilterClick = (evt) => {
-  let photos = galleryData;
+  let sortedPhotos = [];
 
-  if (!getFilter(evt)) {
+  if (!evt.target.matches('button')) {
     return;
   }
 
-  switch (getFilter(evt)) {
+  switch (evt.target.id) {
     case Filters.FILTER_RANDOM:
-      photos = photos
+      sortedPhotos = galleryData
         .toSorted(() => Math.random() - 0.5)
         .slice(0, RANDOM_PHOTOS_COUNT);
       break;
     case Filters.FILTER_DISCUSSED:
-      photos = photos
+      sortedPhotos = galleryData
         .toSorted((a, b) => b.comments.length - a.comments.length);
+      break;
+    default:
+      sortedPhotos = galleryData;
       break;
   }
 
   galleryContainer.innerHTML = '';
-  renderGallery(photos);
+  renderGallery(sortedPhotos);
 };
 
 export const initGallery = (photos) => {
