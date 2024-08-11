@@ -210,7 +210,7 @@
 
   <!-- Сообщение с ошибкой загрузки данных -->
   <template id="alert">
-    <section class="alert">
+    <section class="alert" data-dialog-close="true">
       <div class="alert__inner">
         <h2 class="alert__title">Не удалось загрузить данные. Попробуйте обновить страницу</h2>
         <span class="alert__text">Окно закроется через <output>5</output> сек</span>
@@ -220,7 +220,7 @@
 
   <!-- Сообщение с ошибкой загрузки изображения -->
   <template id="error">
-    <section class="error">
+    <section class="error" data-dialog-close="true">
       <div class="error__inner">
         <h2 class="error__title">Ошибка загрузки файла</h2>
         <button type="button" class="error__button">Попробовать ещё раз</button>
@@ -230,7 +230,7 @@
 
   <!-- Сообщение об успешной загрузке изображения -->
   <template id="success">
-    <section class="success">
+    <section class="success" data-dialog-close="true">
       <div class="success__inner">
         <h2 class="success__title">Изображение успешно загружено</h2>
         <button type="button" class="success__button">Круто!</button>
