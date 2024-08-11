@@ -3,14 +3,6 @@ import {isEscapeKey} from './utils.js';
 const SECONDS_TO_CLOSE = 5;
 const UPDATE_INTERVAL = 1000;
 
-const ClosingElements = {
-  ERROR: 'error',
-  ERROR_BUTTON: 'error__button',
-  SUCCESS:'success',
-  SUCCESS_BUTTON:'success__button',
-  ALERT: 'alert',
-};
-
 let activeDialog = null;
 
 const errorDialogTemplate =
@@ -37,16 +29,9 @@ const closeDialog = () => {
 };
 
 const onDialogClick = (evt) => {
-  const dialogCloseEl = evt.target.className;
-
-  switch (dialogCloseEl) {
-    case ClosingElements.ERROR:
-    case ClosingElements.ERROR_BUTTON:
-    case ClosingElements.SUCCESS:
-    case ClosingElements.SUCCESS_BUTTON:
-    case ClosingElements.ALERT:
-      closeDialog();
-      break;
+  if (evt.target.matches('button')
+    || evt.target.hasAttribute('data-dialog-close')) {
+    closeDialog();
   }
 };
 
