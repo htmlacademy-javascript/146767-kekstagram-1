@@ -1430,6 +1430,13 @@ main {
   border-bottom: 10px solid #d43131;
 }
 
+
+/* ================================== Кастомные стили ================================== */
+
+.gallery {
+  display: contents;
+}
+
 .alert__title,
 .success__title,
 .error__title {
