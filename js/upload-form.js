@@ -11,6 +11,7 @@ const MAX_TAGS_COUNT = 5;
 const TAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAGS_ERROR_TEXT = `Хэш-теги необязательны! Пример хэш-тега: #ХэшТег
   (длина 1го хэш-тега не более 20 символов, не более 5 хэш-тегов под фотографией).`;
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const SubmitButtonText = {
   IDLE: 'Сохранить',
@@ -19,7 +20,8 @@ const SubmitButtonText = {
 
 const form = document.querySelector('#upload-select-image');
 const imgUploadForm = form.querySelector('.img-upload__overlay');
-const imgUploadButton = form.querySelector('.img-upload__input');
+const imgUploadButton = form.querySelector('#upload-file');
+const preview = form.querySelector('img');
 const buttonClose = form.querySelector('.img-upload__cancel');
 const descriptionField = form.querySelector('.text__description');
 const hashtagsField = form.querySelector('.text__hashtags');
@@ -52,8 +54,19 @@ const closeUploadForm = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
+const uploadPreviewPicture = () => {
+  const file = imgUploadButton.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    preview.src = URL.createObjectURL(file);
+    openUploadForm();
+  }
+};
+
 const onFileInputChange = () => {
-  openUploadForm();
+  uploadPreviewPicture();
 };
 
 imgUploadButton.addEventListener('change', onFileInputChange);
