@@ -43,7 +43,7 @@ const renderGallery = (photos) => {
 const onFilterClick = (evt) => {
   let sortedPhotos = [];
 
-  if (!evt.target.matches('button')) {
+  if (!evt.target.matches('.img-filters__button')) {
     return;
   }
 
