@@ -15,6 +15,7 @@ const pictureTemplate = document.querySelector('#picture').content;
 const galleryContainer = document.querySelector('.gallery');
 const imgFilters = document.querySelector('.img-filters');
 const imgFiltersForm = document.querySelector('.img-filters__form');
+const filterButtons = document.querySelectorAll('.img-filters__button');
 
 const createPictureEl = ({id, url, likes, comments}) => {
   const picture = pictureTemplate.cloneNode(true);
@@ -40,12 +41,27 @@ const renderGallery = (photos) => {
   galleryContainer.appendChild(fragment);
 };
 
+const isActiveFilter = (filter) => {
+  filterButtons.forEach((button) => {
+    if (button.classList.contains('img-filters__button--active')
+      && !filter.classList.contains('img-filters__button--active')) {
+      button.classList.remove('img-filters__button--active');
+    }
+  });
+
+  filter.classList.add('img-filters__button--active');
+};
+
 const onFilterClick = (evt) => {
+  const filterButton = document.getElementById(evt.target.id);
+
   let sortedPhotos = [];
 
-  if (!evt.target.matches('.img-filters__button')) {
+  if (!evt.target.closest('.img-filters__button')) {
     return;
   }
+
+  isActiveFilter(filterButton);
 
   switch (evt.target.id) {
     case Filters.FILTER_RANDOM:

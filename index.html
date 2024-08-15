@@ -17,7 +17,7 @@
     <section class="img-filters  img-filters--inactive  container">
       <h2 class="img-filters__title  visually-hidden">Фильтр фотографий</h2>
       <form class="img-filters__form" action="index.html" method="get" autocomplete="off">
-        <button type=button class="img-filters__button  img-filters__button--active" id="filter-default">По умолчанию</button>
+        <button type=button class="img-filters__button img-filters__button--active" id="filter-default">По умолчанию</button>
         <button type=button class="img-filters__button" id="filter-random">Случайные</button>
         <button type=button class="img-filters__button" id="filter-discussed">Обсуждаемые</button>
       </form>
@@ -223,7 +223,7 @@
     <section class="error" data-dialog-close="true">
       <div class="error__inner">
         <h2 class="error__title">Ошибка загрузки файла</h2>
-        <button type="button" class="error__button">Попробовать ещё раз</button>
+        <button type="button" class="error__button" data-button-close="true">Попробовать ещё раз</button>
       </div>
     </section>
   </template>
@@ -233,7 +233,7 @@
     <section class="success" data-dialog-close="true">
       <div class="success__inner">
         <h2 class="success__title">Изображение успешно загружено</h2>
-        <button type="button" class="success__button">Круто!</button>
+        <button type="button" class="success__button" data-button-close="true">Круто!</button>
       </div>
     </section>
   </template>
