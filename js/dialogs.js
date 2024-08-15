@@ -29,8 +29,7 @@ const closeDialog = () => {
 };
 
 const onDialogClick = (evt) => {
-  if (evt.target.closest('.error__button')
-    || evt.target.closest('.success__button')
+  if (evt.target.hasAttribute('data-button-close')
     || evt.target.hasAttribute('data-dialog-close')) {
     closeDialog();
   }
@@ -53,6 +52,7 @@ const closeAfterTimeout = (output, secondsToClose) => {
 
     if (secondsToClose === 0) {
       clearInterval(interval);
+
       if (activeDialog) {
         closeDialog();
       }
